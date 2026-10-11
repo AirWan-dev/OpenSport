@@ -41,6 +41,10 @@ dependencies:
   drift: ^2.35.2
   drift_flutter: ^0.3.1
   path_provider: ^2.1.6
+  vector_map_tiles: ^9.0.0-beta.13
+  maplibre_gl: ^0.27.1
+  http: ^1.6.0
+  vector_tile_renderer: ^6.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,6 +68,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/map/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
