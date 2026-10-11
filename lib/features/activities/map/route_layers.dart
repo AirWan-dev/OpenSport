@@ -37,6 +37,18 @@ class RouteLayers {
 
   Color colorAt(int index) => paceColor(track.speeds[index], _slow, _fast);
 
+  /// Données découpées jusqu'au zoom 12 seulement, puis agrandies : la
+  /// caméra embarquée peut alors bouger sans que MapLibre doive redécouper
+  /// le tracé à chaque image (sinon il disparaît pendant le mouvement).
+  Future<void> _addGeoJson(
+    ml.MapLibreMapController map,
+    String id,
+    Map<String, dynamic> data,
+  ) => map.addSource(
+    id,
+    ml.GeojsonSourceProperties(data: data, maxzoom: 12, tolerance: 0.2),
+  );
+
   /// À appeler après chaque chargement de style : changer de fond de carte
   /// efface toutes les couches ajoutées.
   Future<void> addTo(ml.MapLibreMapController map) async {
@@ -46,15 +58,22 @@ class RouteLayers {
       pts[i].position.latitude,
     ];
 
-    await map.addGeoJsonSource('route-full', {
-      'type': 'Feature',
-      'properties': <String, dynamic>{},
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': [for (var i = 0; i < pts.length; i++) coord(i)],
-      },
+    // Toujours une FeatureCollection : sur Android, une source créée avec
+    // des options n'accepte pas un élément isolé (plantage natif).
+    await _addGeoJson(map, 'route-full', {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': <String, dynamic>{},
+          'geometry': {
+            'type': 'LineString',
+            'coordinates': [for (var i = 0; i < pts.length; i++) coord(i)],
+          },
+        },
+      ],
     });
-    await map.addGeoJsonSource('route', {
+    await _addGeoJson(map, 'route', {
       'type': 'FeatureCollection',
       'features': [
         for (var i = 0; i < pts.length - 1; i += _step)
@@ -73,7 +92,7 @@ class RouteLayers {
     });
 
     var km = 0;
-    await map.addGeoJsonSource('km', {
+    await _addGeoJson(map, 'km', {
       'type': 'FeatureCollection',
       'features': [
         for (var i = 1; i < pts.length; i++)
@@ -81,7 +100,7 @@ class RouteLayers {
             _point(coord(i)[0], coord(i)[1], {'idx': i, 'label': '${++km}'}),
       ],
     });
-    await map.addGeoJsonSource('ends', {
+    await _addGeoJson(map, 'ends', {
       'type': 'FeatureCollection',
       'features': [
         _point(coord(0)[0], coord(0)[1], {'kind': 'start'}),
@@ -90,6 +109,8 @@ class RouteLayers {
         }),
       ],
     });
+    // Le point de tête démarre vide : MapLibre (Android) refuse une source
+    // vide créée avec des options, d'où la création simple.
     await map.addGeoJsonSource('head', _emptyCollection);
 
     await map.addLineLayer(
