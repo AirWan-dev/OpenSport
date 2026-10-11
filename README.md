@@ -1,0 +1,57 @@
+# OpenSport
+
+Application de sport **libre et gratuite** pour Android et iPhone, qui réunit :
+
+- **la musculation**, façon Hevy : séances, séries, routines, progression ;
+- **les activités GPS**, façon Strava : enregistrer une course ou une sortie vélo, la revoir sur une belle carte, analyser son allure et son dénivelé.
+
+Gratuite pour toujours, sans compte obligatoire : les données restent sur le téléphone.
+
+*A free and open-source fitness app combining strength training logs and GPS activity tracking. Local-first, no account required.*
+
+> **État : en construction.** Pour l'instant, seul un prototype de l'écran carte existe, sur un parcours de démonstration.
+
+## Feuille de route
+
+0. **Fondations** : base de données locale, navigation, thème
+1. **GPS et carte** : enregistrement en direct, historique, style de carte sombre fait maison
+2. **Musculation** : exercices, séance en direct, minuteur de repos, routines, records
+3. **Carte enrichie** : carte de chaleur, photos sur le parcours
+4. **Partage** : image de la sortie à partager
+
+## Lancer le projet
+
+Prérequis : [Flutter](https://docs.flutter.dev/get-started/install) (canal stable), plus Android Studio pour Android et Xcode pour iOS.
+
+```bash
+flutter pub get
+flutter run
+```
+
+Aperçu rapide dans le navigateur :
+
+```bash
+flutter run -d chrome
+```
+
+Tests et analyse :
+
+```bash
+flutter analyze
+flutter test
+```
+
+## Technologies
+
+- [Flutter](https://flutter.dev) : un seul code pour Android et iOS
+- [flutter_map](https://pub.dev/packages/flutter_map) : affichage de la carte
+- [fl_chart](https://pub.dev/packages/fl_chart) : graphiques
+- Fonds de carte © [OpenStreetMap](https://www.openstreetmap.org/copyright), imagerie © Esri
+
+## Contribuer
+
+Le projet débute. Les issues et propositions sont les bienvenues.
+
+## Licence
+
+[GPL-3.0](LICENSE) : chacun peut utiliser, étudier, modifier et redistribuer l'application. Toute version modifiée qui est redistribuée doit rester sous la même licence, donc libre.
