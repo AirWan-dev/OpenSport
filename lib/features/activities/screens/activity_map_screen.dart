@@ -1,19 +1,22 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:maplibre_gl/maplibre_gl.dart' as ml;
 import 'package:opensport/core/format.dart';
+import 'package:opensport/core/map/camera_fit.dart';
+import 'package:opensport/core/map/map_styles.dart';
 import 'package:opensport/core/theme/app_theme.dart';
-import 'package:opensport/core/theme/map_styles.dart';
 import 'package:opensport/core/theme/pace_colors.dart';
 import 'package:opensport/core/widgets/glass.dart';
 import 'package:opensport/core/widgets/stat_value.dart';
 
+import '../map/route_layers.dart';
 import '../models/track.dart';
 import '../widgets/elevation_profile.dart';
 
 /// Écran de détail d'une activité : tracé coloré par allure, replay animé,
-/// caméra embarquée et profil d'altitude.
+/// caméra embarquée en 3D et profil d'altitude.
 class ActivityMapScreen extends StatefulWidget {
   const ActivityMapScreen({super.key, required this.track});
 
@@ -23,28 +26,37 @@ class ActivityMapScreen extends StatefulWidget {
   State<ActivityMapScreen> createState() => _ActivityMapScreenState();
 }
 
-typedef _Segment = ({int start, int end, Color color});
-
 class _ActivityMapScreenState extends State<ActivityMapScreen>
-    with TickerProviderStateMixin {
-  final _map = MapController();
+    with SingleTickerProviderStateMixin {
   late final AnimationController _replay;
-  late final AnimationController _pulse;
-
+  late final RouteLayers _layers = RouteLayers(widget.track);
   late final double _slow = widget.track.speedPercentile(0.05);
   late final double _fast = widget.track.speedPercentile(0.95);
-  late final List<_Segment> _segments = _buildSegments();
-  late final List<int> _kmIndexes = [
-    for (var km = 1; km * 1000 < widget.track.distance; km++)
-      widget.track.indexAtDistance(km * 1000.0),
-  ];
+  final Future<String> _initialStyle = MapStyle.dark.load();
 
+  ml.MapLibreMapController? _map;
+  bool _layersReady = false;
   MapStyle _style = MapStyle.dark;
+  Size _viewport = Size.zero;
   bool _follow = false;
   double _bearing = 0;
 
+  // Animation du point de tête, cadencée indépendamment du replay.
+  Timer? _pulseTimer;
+  final _pulseClock = Stopwatch()..start();
+  final _cameraClock = Stopwatch()..start();
+
+  // Une seule mise à jour de la carte à la fois : la plus récente l'emporte.
+  bool _pushing = false;
+  bool _pushAgain = false;
+
+  // Point de tête réellement affiché : la caméra se cale dessus pour ne
+  // jamais devancer le tracé.
+  int _shownHead = 0;
+
   Track get _track => widget.track;
   int get _head => (_replay.value * (_track.points.length - 1)).round();
+  bool get _complete => _replay.value >= 0.999;
 
   @override
   void initState() {
@@ -54,29 +66,83 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
       duration: const Duration(seconds: 16),
       value: 1,
     )..addListener(_onReplayTick);
-    _pulse = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1600),
-    )..repeat();
+    _pulseTimer = Timer.periodic(const Duration(milliseconds: 60), (_) {
+      if (!_complete && !_replay.isAnimating) _pushFrame();
+    });
   }
 
   @override
   void dispose() {
+    _pulseTimer?.cancel();
     _replay.dispose();
-    _pulse.dispose();
     super.dispose();
   }
 
-  List<_Segment> _buildSegments() {
-    const step = 3;
-    return [
-      for (var i = 0; i < _track.points.length - 1; i += step)
-        (
-          start: i,
-          end: math.min(i + step, _track.points.length - 1),
-          color: paceColor(_track.speeds[i], _slow, _fast),
-        ),
-    ];
+  // ----------------------------------------------------------------- Carte
+
+  ml.LatLng _ml(int index) {
+    final p = _track.points[index].position;
+    return ml.LatLng(p.latitude, p.longitude);
+  }
+
+  EdgeInsets get _overviewPadding {
+    final safe = MediaQuery.paddingOf(context);
+    return EdgeInsets.fromLTRB(28, safe.top + 100, 76, safe.bottom + 320);
+  }
+
+  /// Vue de dessus cadrée sur tout le parcours, entre les panneaux.
+  ml.CameraPosition _overviewCamera() {
+    final fit = fitPoints(_track.positions, _viewport, _overviewPadding);
+    return ml.CameraPosition(
+      target: ml.LatLng(fit.center.latitude, fit.center.longitude),
+      zoom: fit.zoom,
+    );
+  }
+
+  ml.CameraPosition _followCamera() => ml.CameraPosition(
+    target: _ml(_shownHead),
+    zoom: 16.4,
+    tilt: 62,
+    bearing: _bearing,
+  );
+
+  Future<void> _onStyleLoaded() async {
+    final map = _map;
+    if (map == null) return;
+    _layersReady = false;
+    _layers.resetState();
+    await _layers.addTo(map);
+    _layersReady = true;
+    _pushFrame();
+  }
+
+  Future<void> _pushFrame() async {
+    final map = _map;
+    if (map == null || !_layersReady) return;
+    if (_pushing) {
+      _pushAgain = true;
+      return;
+    }
+    _pushing = true;
+    try {
+      do {
+        _pushAgain = false;
+        final head = _head;
+        final pulse = (_pulseClock.elapsedMilliseconds % 1600) / 1600;
+        await _layers.showProgress(
+          map,
+          head,
+          complete: _complete,
+          pulse: pulse,
+        );
+        _shownHead = head;
+        if (_follow) _moveFollowCamera();
+      } while (_pushAgain && mounted && _layersReady);
+    } catch (_) {
+      // Changement de fond en cours : les couches seront recréées.
+    } finally {
+      _pushing = false;
+    }
   }
 
   void _onReplayTick() {
@@ -85,17 +151,32 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
       // Interpolation d'angle pour une rotation douce de la caméra.
       final delta = ((target - _bearing + 540) % 360) - 180;
       _bearing = (_bearing + delta * 0.08) % 360;
-      _map.moveAndRotate(_track.points[_head].position, 16.3, -_bearing);
     }
+    _pushFrame();
     setState(() {});
   }
+
+  /// Une consigne toutes les 200 ms au plus, que MapLibre anime lui-même :
+  /// bien plus léger qu'un déplacement à chaque image.
+  void _moveFollowCamera() {
+    if (_cameraClock.elapsedMilliseconds < 200) return;
+    _cameraClock.reset();
+    _map?.animateCamera(
+      ml.CameraUpdate.newCameraPosition(_followCamera()),
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  /// Le replay ralentit en caméra embarquée pour profiter de la vue 3D.
+  Duration get _replayDuration => Duration(seconds: _follow ? 45 : 16);
 
   void _togglePlay() {
     if (_replay.isAnimating) {
       _replay.stop();
     } else {
-      if (_replay.value >= 1) _replay.value = 0;
+      if (_complete) _replay.value = 0;
       _bearing = _track.bearingAt(_head, lookAhead: 10);
+      _replay.duration = _replayDuration;
       _replay.forward();
     }
     setState(() {});
@@ -103,77 +184,75 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
 
   void _toggleFollow() {
     setState(() => _follow = !_follow);
+    if (_replay.isAnimating) {
+      _replay.duration = _replayDuration;
+      _replay.forward();
+    }
     if (_follow) {
+      _shownHead = _head;
       _bearing = _track.bearingAt(_head, lookAhead: 10);
-      _map.moveAndRotate(_track.points[_head].position, 16.3, -_bearing);
+      _map?.animateCamera(
+        ml.CameraUpdate.newCameraPosition(_followCamera()),
+        duration: const Duration(milliseconds: 1200),
+      );
     } else {
       _fitRoute();
     }
   }
 
   void _fitRoute() {
-    _map.rotate(0);
-    _map.fitCamera(_routeFit(context));
-  }
-
-  CameraFit _routeFit(BuildContext context) {
-    final padding = MediaQuery.paddingOf(context);
-    return CameraFit.bounds(
-      bounds: LatLngBounds.fromPoints(_track.positions),
-      padding: EdgeInsets.fromLTRB(
-        32,
-        padding.top + 110,
-        32,
-        padding.bottom + 330,
-      ),
+    setState(() => _follow = false);
+    _map?.animateCamera(
+      ml.CameraUpdate.newCameraPosition(_overviewCamera()),
+      duration: const Duration(milliseconds: 900),
     );
   }
 
-  void _cycleStyle() {
-    final styles = MapStyle.values;
-    setState(() => _style = styles[(_style.index + 1) % styles.length]);
+  Future<void> _cycleStyle() async {
+    final next = MapStyle.values[(_style.index + 1) % MapStyle.values.length];
+    setState(() => _style = next);
+    final style = await next.load();
+    _layersReady = false;
+    await _map?.setStyle(style);
   }
 
   @override
   Widget build(BuildContext context) {
     final head = _head;
-    final complete = _replay.value >= 0.999;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          FlutterMap(
-            mapController: _map,
-            options: MapOptions(
-              initialCameraFit: _routeFit(context),
-              backgroundColor: const Color(0xFF0E1116),
-              onPositionChanged: (camera, hasGesture) {
-                if (hasGesture && _follow) setState(() => _follow = false);
-              },
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: _style.url,
-                tileBuilder: _style.tileBuilder,
-                userAgentPackageName: 'org.opensport.opensport',
-                maxNativeZoom: 19,
-              ),
-              ..._routeLayers(head),
-              MarkerLayer(
-                rotate: true,
-                markers: [
-                  ..._kmMarkers(head),
-                  _startMarker(complete),
-                  if (!complete) _headMarker(head),
-                ],
-              ),
-              RichAttributionWidget(
-                alignment: AttributionAlignment.bottomLeft,
-                showFlutterMapAttribution: false,
-                attributions: [TextSourceAttribution(_style.attribution)],
-              ),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              _viewport = constraints.biggest;
+              return FutureBuilder(
+                future: _initialStyle,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const SizedBox.expand();
+                  return Listener(
+                    // Toucher la carte reprend la main sur la caméra.
+                    onPointerDown: (_) {
+                      if (_follow) setState(() => _follow = false);
+                    },
+                    child: ml.MapLibreMap(
+                      styleString: snapshot.data!,
+                      initialCameraPosition: _overviewCamera(),
+                      compassEnabled: false,
+                      attributionButtonPosition:
+                          ml.AttributionButtonPosition.topLeft,
+                      attributionButtonMargins: math.Point(
+                        8,
+                        MediaQuery.paddingOf(context).top + 84,
+                      ),
+                      onMapCreated: (controller) => _map = controller,
+                      onStyleLoadedCallback: _onStyleLoaded,
+                    ),
+                  );
+                },
+              );
+            },
           ),
           _topBar(context),
           _sideButtons(context),
@@ -184,147 +263,6 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
             child: _bottomPanel(head),
           ),
         ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------- Tracé
-
-  List<Widget> _routeLayers(int head) {
-    final positions = _track.positions;
-    final done = positions.sublist(0, head + 1);
-    final visible = _segments
-        .where((s) => s.start < head)
-        .map(
-          (s) => (
-            points: positions.sublist(s.start, math.min(s.end, head) + 1),
-            color: s.color,
-          ),
-        );
-
-    return [
-      // Parcours complet en fantôme pendant le replay.
-      PolylineLayer(
-        polylines: [
-          Polyline(
-            points: positions,
-            strokeWidth: 4,
-            color: Colors.white.withValues(alpha: 0.22),
-          ),
-          if (done.length > 1)
-            Polyline(
-              points: done,
-              strokeWidth: 9,
-              color: Colors.black.withValues(alpha: 0.55),
-            ),
-        ],
-      ),
-      // Halo lumineux : segments opaques, transparence appliquée à la couche
-      // entière pour éviter les surépaisseurs aux jointures.
-      Opacity(
-        opacity: 0.25,
-        child: PolylineLayer(
-          polylines: [
-            for (final s in visible)
-              Polyline(points: s.points, strokeWidth: 16, color: s.color),
-          ],
-        ),
-      ),
-      // Trait principal coloré par allure.
-      PolylineLayer(
-        polylines: [
-          for (final s in visible)
-            Polyline(points: s.points, strokeWidth: 5, color: s.color),
-        ],
-      ),
-    ];
-  }
-
-  // ------------------------------------------------------------- Marqueurs
-
-  Marker _startMarker(bool complete) {
-    return Marker(
-      point: _track.points.first.position,
-      width: 34,
-      height: 34,
-      child: Container(
-        decoration: BoxDecoration(
-          color: complete ? Colors.white : const Color(0xFF22C55E),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 3),
-          boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black54)],
-        ),
-        child: Icon(
-          complete ? Icons.sports_score_rounded : Icons.play_arrow_rounded,
-          size: 18,
-          color: complete ? Colors.black : Colors.white,
-        ),
-      ),
-    );
-  }
-
-  List<Marker> _kmMarkers(int head) {
-    return [
-      for (var k = 0; k < _kmIndexes.length; k++)
-        if (_kmIndexes[k] <= head)
-          Marker(
-            point: _track.points[_kmIndexes[k]].position,
-            width: 24,
-            height: 24,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: const Color(0xFF11151C),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white70, width: 1.5),
-              ),
-              child: Text(
-                '${k + 1}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-    ];
-  }
-
-  Marker _headMarker(int head) {
-    final color = paceColor(_track.speeds[head], _slow, _fast);
-    return Marker(
-      point: _track.points[head].position,
-      width: 70,
-      height: 70,
-      child: AnimatedBuilder(
-        animation: _pulse,
-        builder: (context, _) {
-          final t = _pulse.value;
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 18 + 50 * t,
-                height: 18 + 50 * t,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color.withValues(alpha: 0.35 * (1 - t)),
-                ),
-              ),
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 3),
-                  boxShadow: [BoxShadow(blurRadius: 14, color: color)],
-                ),
-              ),
-            ],
-          );
-        },
       ),
     );
   }
@@ -417,10 +355,7 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
           GlassButton(
             icon: Icons.fit_screen_rounded,
             tooltip: 'Voir tout le parcours',
-            onPressed: () {
-              setState(() => _follow = false);
-              _fitRoute();
-            },
+            onPressed: _fitRoute,
           ),
         ],
       ),
