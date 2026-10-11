@@ -19,8 +19,7 @@ enum MapStyle {
   satellite(
     label: 'Satellite',
     icon: Icons.satellite_alt_rounded,
-    url:
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution: '© Esri, Maxar, Earthstar Geographics',
   );
 

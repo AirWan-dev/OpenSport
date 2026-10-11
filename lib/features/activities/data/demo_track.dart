@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:latlong2/latlong.dart';
+import 'package:opensport/core/models/sport.dart';
 
 import '../models/track.dart';
 
@@ -21,7 +22,8 @@ Track buildDemoTrack() {
     final theta = 2 * math.pi * i / count;
 
     // Boucle organique : un cercle déformé par plusieurs harmoniques.
-    final radius = 1450 +
+    final radius =
+        1450 +
         320 * math.sin(3 * theta + 0.6) +
         170 * math.sin(5 * theta + 1.3) +
         70 * math.sin(11 * theta) +
@@ -30,7 +32,8 @@ Track buildDemoTrack() {
     final stretched = radius * (1 + 0.25 * math.cos(theta).abs());
     final position = distance.offset(center, stretched, bearing);
 
-    final elevation = 38 +
+    final elevation =
+        38 +
         16 * math.sin(2 * theta + 1) +
         6 * math.sin(7 * theta) +
         rnd.nextDouble() * 0.6;
@@ -39,27 +42,30 @@ Track buildDemoTrack() {
       final d = distance(previous, position);
       final slope = (elevation - previousElevation!) / math.max(d, 1);
       // Allure de base ~5'10"/km, ralentit en montée, accélère en fin de sortie.
-      final speed = (3.2 +
-              0.35 * math.sin(4 * theta) +
-              (i > count * 0.82 ? 0.55 : 0) -
-              slope * 9 +
-              (rnd.nextDouble() - 0.5) * 0.25)
-          .clamp(2.3, 4.6);
+      final speed =
+          (3.2 +
+                  0.35 * math.sin(4 * theta) +
+                  (i > count * 0.82 ? 0.55 : 0) -
+                  slope * 9 +
+                  (rnd.nextDouble() - 0.5) * 0.25)
+              .clamp(2.3, 4.6);
       elapsedMs += d / speed * 1000;
     }
 
-    points.add(TrackPoint(
-      position,
-      elevation,
-      Duration(milliseconds: elapsedMs.round()),
-    ));
+    points.add(
+      TrackPoint(
+        position,
+        elevation,
+        Duration(milliseconds: elapsedMs.round()),
+      ),
+    );
     previous = position;
     previousElevation = elevation;
   }
 
   return Track(
-    name: 'Sortie du dimanche matin',
-    sport: 'Course à pied',
+    name: 'Sortie de démonstration',
+    sport: Sport.run,
     startedAt: DateTime(2026, 10, 11, 8, 42),
     points: points,
   );

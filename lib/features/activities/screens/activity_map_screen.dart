@@ -2,18 +2,15 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:opensport/core/format.dart';
+import 'package:opensport/core/theme/app_theme.dart';
+import 'package:opensport/core/theme/map_styles.dart';
+import 'package:opensport/core/theme/pace_colors.dart';
+import 'package:opensport/core/widgets/glass.dart';
+import 'package:opensport/core/widgets/stat_value.dart';
 
 import '../models/track.dart';
-import '../theme/map_styles.dart';
-import '../theme/pace_colors.dart';
 import '../widgets/elevation_profile.dart';
-import '../widgets/glass.dart';
-
-const _accent = Color(0xFFFC5200);
-const _months = [
-  'janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin',
-  'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.',
-];
 
 /// Écran de détail d'une activité : tracé coloré par allure, replay animé,
 /// caméra embarquée et profil d'altitude.
@@ -124,7 +121,11 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
     return CameraFit.bounds(
       bounds: LatLngBounds.fromPoints(_track.positions),
       padding: EdgeInsets.fromLTRB(
-          32, padding.top + 110, 32, padding.bottom + 330),
+        32,
+        padding.top + 110,
+        32,
+        padding.bottom + 330,
+      ),
     );
   }
 
@@ -139,7 +140,7 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
     final complete = _replay.value >= 0.999;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF05070B),
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           FlutterMap(
@@ -192,40 +193,50 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
   List<Widget> _routeLayers(int head) {
     final positions = _track.positions;
     final done = positions.sublist(0, head + 1);
-    final visible = _segments.where((s) => s.start < head).map((s) => (
-          points: positions.sublist(s.start, math.min(s.end, head) + 1),
-          color: s.color,
-        ));
+    final visible = _segments
+        .where((s) => s.start < head)
+        .map(
+          (s) => (
+            points: positions.sublist(s.start, math.min(s.end, head) + 1),
+            color: s.color,
+          ),
+        );
 
     return [
       // Parcours complet en fantôme pendant le replay.
-      PolylineLayer(polylines: [
-        Polyline(
-          points: positions,
-          strokeWidth: 4,
-          color: Colors.white.withValues(alpha: 0.22),
-        ),
-        if (done.length > 1)
+      PolylineLayer(
+        polylines: [
           Polyline(
-            points: done,
-            strokeWidth: 9,
-            color: Colors.black.withValues(alpha: 0.55),
+            points: positions,
+            strokeWidth: 4,
+            color: Colors.white.withValues(alpha: 0.22),
           ),
-      ]),
+          if (done.length > 1)
+            Polyline(
+              points: done,
+              strokeWidth: 9,
+              color: Colors.black.withValues(alpha: 0.55),
+            ),
+        ],
+      ),
       // Halo lumineux : segments opaques, transparence appliquée à la couche
       // entière pour éviter les surépaisseurs aux jointures.
       Opacity(
         opacity: 0.25,
-        child: PolylineLayer(polylines: [
-          for (final s in visible)
-            Polyline(points: s.points, strokeWidth: 16, color: s.color),
-        ]),
+        child: PolylineLayer(
+          polylines: [
+            for (final s in visible)
+              Polyline(points: s.points, strokeWidth: 16, color: s.color),
+          ],
+        ),
       ),
       // Trait principal coloré par allure.
-      PolylineLayer(polylines: [
-        for (final s in visible)
-          Polyline(points: s.points, strokeWidth: 5, color: s.color),
-      ]),
+      PolylineLayer(
+        polylines: [
+          for (final s in visible)
+            Polyline(points: s.points, strokeWidth: 5, color: s.color),
+        ],
+      ),
     ];
   }
 
@@ -321,52 +332,65 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
   // ------------------------------------------------------------ Interface
 
   Widget _topBar(BuildContext context) {
-    final date = _track.startedAt;
-    final when = '${date.day} ${_months[date.month - 1]} · '
-        '${date.hour}h${date.minute.toString().padLeft(2, '0')}';
     return Positioned(
       top: MediaQuery.paddingOf(context).top + 10,
       left: 12,
       right: 12,
-      child: Glass(
-        padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-        child: Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: _accent.withValues(alpha: 0.18),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(Icons.directions_run_rounded, color: _accent),
+      child: Row(
+        children: [
+          if (Navigator.canPop(context)) ...[
+            GlassButton(
+              icon: Icons.arrow_back_rounded,
+              tooltip: 'Retour',
+              onPressed: () => Navigator.pop(context),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _track.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${_track.sport} · $when',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(width: 10),
           ],
-        ),
+          Expanded(child: _titleCard()),
+        ],
+      ),
+    );
+  }
+
+  Widget _titleCard() {
+    return Glass(
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(_track.sport.icon, color: AppColors.accent),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _track.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${_track.sport.label} · ${formatDateTime(_track.startedAt)}',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -426,18 +450,18 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _Stat(
+                    StatValue(
                       label: 'Distance',
                       value: distanceKm.toStringAsFixed(2),
                       unit: 'km',
                     ),
-                    _Stat(label: 'Durée', value: formatDuration(elapsed)),
-                    _Stat(
+                    StatValue(label: 'Durée', value: formatDuration(elapsed)),
+                    StatValue(
                       label: complete ? 'Allure moy.' : 'Allure',
                       value: formatPace(pace),
                       unit: '/km',
                     ),
-                    _Stat(
+                    StatValue(
                       label: complete ? 'D+' : 'Altitude',
                       value: complete
                           ? _track.elevationGain.toStringAsFixed(0)
@@ -452,8 +476,8 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
                 icon: playing
                     ? Icons.pause_rounded
                     : complete
-                        ? Icons.replay_rounded
-                        : Icons.play_arrow_rounded,
+                    ? Icons.replay_rounded
+                    : Icons.play_arrow_rounded,
                 onPressed: _togglePlay,
               ),
             ],
@@ -468,7 +492,9 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
               fastSpeed: _fast,
               onScrub: (fraction) {
                 _replay.stop();
-                final index = _track.indexAtDistance(fraction * _track.distance);
+                final index = _track.indexAtDistance(
+                  fraction * _track.distance,
+                );
                 _replay.value = index / (_track.points.length - 1);
               },
             ),
@@ -477,54 +503,6 @@ class _ActivityMapScreenState extends State<ActivityMapScreen>
           _PaceLegend(slow: _slow, fast: _fast),
         ],
       ),
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat({required this.label, required this.value, this.unit});
-
-  final String label;
-  final String value;
-  final String? unit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.5),
-            fontSize: 10,
-            letterSpacing: 0.8,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text.rich(
-          TextSpan(children: [
-            TextSpan(
-              text: value,
-              style: const TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.w800,
-                fontFeatures: [FontFeature.tabularFigures()],
-              ),
-            ),
-            if (unit != null)
-              TextSpan(
-                text: ' $unit',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white.withValues(alpha: 0.6),
-                ),
-              ),
-          ]),
-          style: const TextStyle(color: Colors.white),
-        ),
-      ],
     );
   }
 }
@@ -538,10 +516,10 @@ class _PlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: _accent,
+      color: AppColors.accent,
       shape: const CircleBorder(),
       elevation: 6,
-      shadowColor: _accent,
+      shadowColor: AppColors.accent,
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onPressed,

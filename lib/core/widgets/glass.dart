@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 /// Panneau translucide flouté posé par-dessus la carte.
 class Glass extends StatelessWidget {
   const Glass({
@@ -24,9 +26,9 @@ class Glass extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-            color: const Color(0xFF0B0F17).withValues(alpha: 0.62),
+            color: AppColors.glass.withValues(alpha: 0.62),
             borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+            border: Border.all(color: AppColors.outline),
           ),
           child: child,
         ),
@@ -65,7 +67,7 @@ class GlassButton extends StatelessWidget {
             child: Icon(
               icon,
               size: 22,
-              color: active ? const Color(0xFFFC5200) : Colors.white,
+              color: active ? AppColors.accent : Colors.white,
             ),
           ),
         ),

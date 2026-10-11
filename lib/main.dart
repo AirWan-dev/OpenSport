@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'data/demo_track.dart';
-import 'screens/activity_map_screen.dart';
+import 'app/home_shell.dart';
+import 'core/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-  runApp(const OpenSportApp());
+  runApp(const ProviderScope(child: OpenSportApp()));
 }
 
 class OpenSportApp extends StatelessWidget {
@@ -18,11 +19,8 @@ class OpenSportApp extends StatelessWidget {
     return MaterialApp(
       title: 'OpenSport',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        colorSchemeSeed: const Color(0xFFFC5200),
-      ),
-      home: ActivityMapScreen(track: buildDemoTrack()),
+      theme: AppTheme.dark(),
+      home: const HomeShell(),
     );
   }
 }

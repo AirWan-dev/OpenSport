@@ -9,7 +9,7 @@ Gratuite pour toujours, sans compte obligatoire : les données restent sur le t�
 
 *A free and open-source fitness app combining strength training logs and GPS activity tracking. Local-first, no account required.*
 
-> **État : en construction.** Pour l'instant, seul un prototype de l'écran carte existe, sur un parcours de démonstration.
+> **État : en construction.** Les fondations sont posées (base locale, navigation, thème) ; l'enregistrement GPS et la musculation arrivent.
 
 ## Feuille de route
 
@@ -41,11 +41,32 @@ flutter analyze
 flutter test
 ```
 
+## Structure du code
+
+```
+lib/
+  app/            squelette de l'app (onglets)
+  core/           base de données, thème, widgets et formats partagés
+  features/
+    activities/   activités GPS : fil, carte, replay
+    record/       enregistrement GPS (à venir)
+    workouts/     musculation (à venir)
+    profile/      profil et informations
+```
+
+Après une modification du schéma de la base (`lib/core/database/app_database.dart`), régénérer le code :
+
+```bash
+dart run build_runner build
+```
+
 ## Technologies
 
 - [Flutter](https://flutter.dev) : un seul code pour Android et iOS
 - [flutter_map](https://pub.dev/packages/flutter_map) : affichage de la carte
 - [fl_chart](https://pub.dev/packages/fl_chart) : graphiques
+- [Drift](https://drift.simonbinder.eu) : base SQLite locale
+- [Riverpod](https://riverpod.dev) : gestion d'état
 - Fonds de carte © [OpenStreetMap](https://www.openstreetmap.org/copyright), imagerie © Esri
 
 ## Contribuer

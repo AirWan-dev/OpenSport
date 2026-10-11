@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:latlong2/latlong.dart';
+import 'package:opensport/core/models/sport.dart';
 
 /// Un point GPS enregistré pendant une activité.
 class TrackPoint {
@@ -18,7 +19,7 @@ class TrackPoint {
 /// Une activité GPS (course, vélo...) avec ses statistiques dérivées.
 class Track {
   final String name;
-  final String sport;
+  final Sport sport;
   final DateTime startedAt;
   final List<TrackPoint> points;
 
@@ -28,12 +29,23 @@ class Track {
   /// Vitesse lissée (m/s) à chaque point.
   final List<double> speeds;
 
-  Track._(this.name, this.sport, this.startedAt, this.points,
-      this.cumulativeDistance, this.speeds);
+  /// Identifiant en base, nul pour une trace pas encore enregistrée.
+  final int? id;
+
+  Track._(
+    this.id,
+    this.name,
+    this.sport,
+    this.startedAt,
+    this.points,
+    this.cumulativeDistance,
+    this.speeds,
+  );
 
   factory Track({
+    int? id,
     required String name,
-    required String sport,
+    required Sport sport,
     required DateTime startedAt,
     required List<TrackPoint> points,
   }) {
@@ -43,7 +55,8 @@ class Track {
     for (var i = 1; i < points.length; i++) {
       final d = distance(points[i - 1].position, points[i].position);
       cumulative.add(cumulative.last + d);
-      final dt = (points[i].elapsed - points[i - 1].elapsed).inMilliseconds / 1000;
+      final dt =
+          (points[i].elapsed - points[i - 1].elapsed).inMilliseconds / 1000;
       raw.add(dt > 0 ? d / dt : raw.last);
     }
     if (raw.length > 1) raw[0] = raw[1];
@@ -60,7 +73,7 @@ class Track {
       return sum / (to - from + 1);
     });
 
-    return Track._(name, sport, startedAt, points, cumulative, smoothed);
+    return Track._(id, name, sport, startedAt, points, cumulative, smoothed);
   }
 
   List<LatLng> get positions => [for (final p in points) p.position];
