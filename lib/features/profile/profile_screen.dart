@@ -4,7 +4,6 @@ import 'package:opensport/core/format.dart';
 import 'package:opensport/core/theme/app_theme.dart';
 import 'package:opensport/core/widgets/stat_value.dart';
 import 'package:opensport/features/activities/data/activity_providers.dart';
-import 'package:opensport/features/map_lab/map_lab_screen.dart';
 
 /// Profil : totaux, données personnelles et informations sur l'application.
 class ProfileScreen extends ConsumerWidget {
@@ -58,30 +57,6 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
-          _Section(
-            title: 'Développement',
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const MapLabScreen()),
-              ),
-              child: const Row(
-                children: [
-                  Expanded(
-                    child: _InfoRow(
-                      icon: Icons.science_outlined,
-                      text:
-                          'Labo carte : essai comparatif flutter_map / '
-                          'MapLibre',
-                    ),
-                  ),
-                  Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
           const _Section(
             title: 'À propos',
             child: Column(
@@ -101,8 +76,8 @@ class ProfileScreen extends ConsumerWidget {
                 _InfoRow(
                   icon: Icons.map_outlined,
                   text:
-                      'Cartes © contributeurs OpenStreetMap, '
-                      'imagerie satellite © Esri',
+                      'Cartes © OpenFreeMap, © OpenMapTiles, © contributeurs '
+                      'OpenStreetMap ; imagerie satellite © Esri',
                 ),
               ],
             ),

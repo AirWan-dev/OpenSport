@@ -48,7 +48,7 @@ lib/
   app/            squelette de l'app (onglets)
   core/           base de données, thème, widgets et formats partagés
   features/
-    activities/   activités GPS : fil, carte, replay
+    activities/   activités GPS : fil, carte MapLibre, replay 3D
     record/       enregistrement GPS (à venir)
     workouts/     musculation (à venir)
     profile/      profil et informations
@@ -63,11 +63,12 @@ dart run build_runner build
 ## Technologies
 
 - [Flutter](https://flutter.dev) : un seul code pour Android et iOS
-- [flutter_map](https://pub.dev/packages/flutter_map) : affichage de la carte
+- [MapLibre](https://maplibre.org) ([maplibre_gl](https://pub.dev/packages/maplibre_gl)) : cartes vectorielles, 3D
 - [fl_chart](https://pub.dev/packages/fl_chart) : graphiques
 - [Drift](https://drift.simonbinder.eu) : base SQLite locale
 - [Riverpod](https://riverpod.dev) : gestion d'état
-- Fonds de carte © [OpenStreetMap](https://www.openstreetmap.org/copyright), imagerie © Esri
+- Tuiles vectorielles [OpenFreeMap](https://openfreemap.org) © [OpenMapTiles](https://openmaptiles.org) © [contributeurs OpenStreetMap](https://www.openstreetmap.org/copyright) ; imagerie satellite © Esri
+- Style sombre maison : `assets/map/opensport_dark.json`
 
 ## Contribuer
 
