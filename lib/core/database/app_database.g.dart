@@ -107,6 +107,29 @@ class $ActivitiesTable extends Activities
     defaultValue: currentDateAndTime,
   );
   @override
+  late final GeneratedColumnWithTypeConverter<ActivityStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(ActivityStatus.finished.name),
+      ).withConverter<ActivityStatus>($ActivitiesTable.$converterstatus);
+  static const VerificationMeta _isDemoMeta = const VerificationMeta('isDemo');
+  @override
+  late final GeneratedColumn<bool> isDemo = GeneratedColumn<bool>(
+    'is_demo',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_demo" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     name,
@@ -117,6 +140,8 @@ class $ActivitiesTable extends Activities
     elevationGainM,
     notes,
     createdAt,
+    status,
+    isDemo,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -186,6 +211,12 @@ class $ActivitiesTable extends Activities
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('is_demo')) {
+      context.handle(
+        _isDemoMeta,
+        isDemo.isAcceptableOrUnknown(data['is_demo']!, _isDemoMeta),
+      );
+    }
     return context;
   }
 
@@ -233,6 +264,16 @@ class $ActivitiesTable extends Activities
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      status: $ActivitiesTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
+      isDemo: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_demo'],
+      )!,
     );
   }
 
@@ -243,6 +284,8 @@ class $ActivitiesTable extends Activities
 
   static JsonTypeConverter2<Sport, String, String> $convertersport =
       const EnumNameConverter<Sport>(Sport.values);
+  static JsonTypeConverter2<ActivityStatus, String, String> $converterstatus =
+      const EnumNameConverter<ActivityStatus>(ActivityStatus.values);
 }
 
 class Activity extends DataClass implements Insertable<Activity> {
@@ -255,6 +298,10 @@ class Activity extends DataClass implements Insertable<Activity> {
   final double elevationGainM;
   final String? notes;
   final DateTime createdAt;
+  final ActivityStatus status;
+
+  /// Sortie de démonstration, retirée dès la première vraie sortie.
+  final bool isDemo;
   const Activity({
     required this.id,
     required this.name,
@@ -265,6 +312,8 @@ class Activity extends DataClass implements Insertable<Activity> {
     required this.elevationGainM,
     this.notes,
     required this.createdAt,
+    required this.status,
+    required this.isDemo,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -284,6 +333,12 @@ class Activity extends DataClass implements Insertable<Activity> {
       map['notes'] = Variable<String>(notes);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    {
+      map['status'] = Variable<String>(
+        $ActivitiesTable.$converterstatus.toSql(status),
+      );
+    }
+    map['is_demo'] = Variable<bool>(isDemo);
     return map;
   }
 
@@ -300,6 +355,8 @@ class Activity extends DataClass implements Insertable<Activity> {
           ? const Value.absent()
           : Value(notes),
       createdAt: Value(createdAt),
+      status: Value(status),
+      isDemo: Value(isDemo),
     );
   }
 
@@ -320,6 +377,10 @@ class Activity extends DataClass implements Insertable<Activity> {
       elevationGainM: serializer.fromJson<double>(json['elevationGainM']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      status: $ActivitiesTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
+      isDemo: serializer.fromJson<bool>(json['isDemo']),
     );
   }
   @override
@@ -337,6 +398,10 @@ class Activity extends DataClass implements Insertable<Activity> {
       'elevationGainM': serializer.toJson<double>(elevationGainM),
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'status': serializer.toJson<String>(
+        $ActivitiesTable.$converterstatus.toJson(status),
+      ),
+      'isDemo': serializer.toJson<bool>(isDemo),
     };
   }
 
@@ -350,6 +415,8 @@ class Activity extends DataClass implements Insertable<Activity> {
     double? elevationGainM,
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
+    ActivityStatus? status,
+    bool? isDemo,
   }) => Activity(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -360,6 +427,8 @@ class Activity extends DataClass implements Insertable<Activity> {
     elevationGainM: elevationGainM ?? this.elevationGainM,
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
+    status: status ?? this.status,
+    isDemo: isDemo ?? this.isDemo,
   );
   Activity copyWithCompanion(ActivitiesCompanion data) {
     return Activity(
@@ -376,6 +445,8 @@ class Activity extends DataClass implements Insertable<Activity> {
           : this.elevationGainM,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      status: data.status.present ? data.status.value : this.status,
+      isDemo: data.isDemo.present ? data.isDemo.value : this.isDemo,
     );
   }
 
@@ -390,7 +461,9 @@ class Activity extends DataClass implements Insertable<Activity> {
           ..write('distanceM: $distanceM, ')
           ..write('elevationGainM: $elevationGainM, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status, ')
+          ..write('isDemo: $isDemo')
           ..write(')'))
         .toString();
   }
@@ -406,6 +479,8 @@ class Activity extends DataClass implements Insertable<Activity> {
     elevationGainM,
     notes,
     createdAt,
+    status,
+    isDemo,
   );
   @override
   bool operator ==(Object other) =>
@@ -419,7 +494,9 @@ class Activity extends DataClass implements Insertable<Activity> {
           other.distanceM == this.distanceM &&
           other.elevationGainM == this.elevationGainM &&
           other.notes == this.notes &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.status == this.status &&
+          other.isDemo == this.isDemo);
 }
 
 class ActivitiesCompanion extends UpdateCompanion<Activity> {
@@ -432,6 +509,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
   final Value<double> elevationGainM;
   final Value<String?> notes;
   final Value<DateTime> createdAt;
+  final Value<ActivityStatus> status;
+  final Value<bool> isDemo;
   const ActivitiesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -442,6 +521,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
     this.elevationGainM = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.status = const Value.absent(),
+    this.isDemo = const Value.absent(),
   });
   ActivitiesCompanion.insert({
     this.id = const Value.absent(),
@@ -453,6 +534,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
     this.elevationGainM = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.status = const Value.absent(),
+    this.isDemo = const Value.absent(),
   }) : name = Value(name),
        sport = Value(sport),
        startedAt = Value(startedAt),
@@ -468,6 +551,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
     Expression<double>? elevationGainM,
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
+    Expression<String>? status,
+    Expression<bool>? isDemo,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -479,6 +564,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
       if (elevationGainM != null) 'elevation_gain_m': elevationGainM,
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
+      if (status != null) 'status': status,
+      if (isDemo != null) 'is_demo': isDemo,
     });
   }
 
@@ -492,6 +579,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
     Value<double>? elevationGainM,
     Value<String?>? notes,
     Value<DateTime>? createdAt,
+    Value<ActivityStatus>? status,
+    Value<bool>? isDemo,
   }) {
     return ActivitiesCompanion(
       id: id ?? this.id,
@@ -503,6 +592,8 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
       elevationGainM: elevationGainM ?? this.elevationGainM,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      status: status ?? this.status,
+      isDemo: isDemo ?? this.isDemo,
     );
   }
 
@@ -538,6 +629,14 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(
+        $ActivitiesTable.$converterstatus.toSql(status.value),
+      );
+    }
+    if (isDemo.present) {
+      map['is_demo'] = Variable<bool>(isDemo.value);
+    }
     return map;
   }
 
@@ -552,7 +651,9 @@ class ActivitiesCompanion extends UpdateCompanion<Activity> {
           ..write('distanceM: $distanceM, ')
           ..write('elevationGainM: $elevationGainM, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('status: $status, ')
+          ..write('isDemo: $isDemo')
           ..write(')'))
         .toString();
   }
@@ -655,6 +756,18 @@ class $TrackPointsTable extends TrackPoints
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _segmentMeta = const VerificationMeta(
+    'segment',
+  );
+  @override
+  late final GeneratedColumn<int> segment = GeneratedColumn<int>(
+    'segment',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -665,6 +778,7 @@ class $TrackPointsTable extends TrackPoints
     elevation,
     elapsedMs,
     accuracyM,
+    segment,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -733,6 +847,12 @@ class $TrackPointsTable extends TrackPoints
         accuracyM.isAcceptableOrUnknown(data['accuracy_m']!, _accuracyMMeta),
       );
     }
+    if (data.containsKey('segment')) {
+      context.handle(
+        _segmentMeta,
+        segment.isAcceptableOrUnknown(data['segment']!, _segmentMeta),
+      );
+    }
     return context;
   }
 
@@ -774,6 +894,10 @@ class $TrackPointsTable extends TrackPoints
         DriftSqlType.double,
         data['${effectivePrefix}accuracy_m'],
       ),
+      segment: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}segment'],
+      )!,
     );
   }
 
@@ -794,6 +918,10 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
 
   /// Précision horizontale annoncée par le GPS, en mètres.
   final double? accuracyM;
+
+  /// Tronçon (version 2) : il change à chaque reprise après une pause, et
+  /// la distance entre deux tronçons n'est pas comptée.
+  final int segment;
   const TrackPointRow({
     required this.id,
     required this.activityId,
@@ -803,6 +931,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
     this.elevation,
     required this.elapsedMs,
     this.accuracyM,
+    required this.segment,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -819,6 +948,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
     if (!nullToAbsent || accuracyM != null) {
       map['accuracy_m'] = Variable<double>(accuracyM);
     }
+    map['segment'] = Variable<int>(segment);
     return map;
   }
 
@@ -836,6 +966,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
       accuracyM: accuracyM == null && nullToAbsent
           ? const Value.absent()
           : Value(accuracyM),
+      segment: Value(segment),
     );
   }
 
@@ -853,6 +984,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
       elevation: serializer.fromJson<double?>(json['elevation']),
       elapsedMs: serializer.fromJson<int>(json['elapsedMs']),
       accuracyM: serializer.fromJson<double?>(json['accuracyM']),
+      segment: serializer.fromJson<int>(json['segment']),
     );
   }
   @override
@@ -867,6 +999,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
       'elevation': serializer.toJson<double?>(elevation),
       'elapsedMs': serializer.toJson<int>(elapsedMs),
       'accuracyM': serializer.toJson<double?>(accuracyM),
+      'segment': serializer.toJson<int>(segment),
     };
   }
 
@@ -879,6 +1012,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
     Value<double?> elevation = const Value.absent(),
     int? elapsedMs,
     Value<double?> accuracyM = const Value.absent(),
+    int? segment,
   }) => TrackPointRow(
     id: id ?? this.id,
     activityId: activityId ?? this.activityId,
@@ -888,6 +1022,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
     elevation: elevation.present ? elevation.value : this.elevation,
     elapsedMs: elapsedMs ?? this.elapsedMs,
     accuracyM: accuracyM.present ? accuracyM.value : this.accuracyM,
+    segment: segment ?? this.segment,
   );
   TrackPointRow copyWithCompanion(TrackPointsCompanion data) {
     return TrackPointRow(
@@ -901,6 +1036,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
       elevation: data.elevation.present ? data.elevation.value : this.elevation,
       elapsedMs: data.elapsedMs.present ? data.elapsedMs.value : this.elapsedMs,
       accuracyM: data.accuracyM.present ? data.accuracyM.value : this.accuracyM,
+      segment: data.segment.present ? data.segment.value : this.segment,
     );
   }
 
@@ -914,7 +1050,8 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
           ..write('longitude: $longitude, ')
           ..write('elevation: $elevation, ')
           ..write('elapsedMs: $elapsedMs, ')
-          ..write('accuracyM: $accuracyM')
+          ..write('accuracyM: $accuracyM, ')
+          ..write('segment: $segment')
           ..write(')'))
         .toString();
   }
@@ -929,6 +1066,7 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
     elevation,
     elapsedMs,
     accuracyM,
+    segment,
   );
   @override
   bool operator ==(Object other) =>
@@ -941,7 +1079,8 @@ class TrackPointRow extends DataClass implements Insertable<TrackPointRow> {
           other.longitude == this.longitude &&
           other.elevation == this.elevation &&
           other.elapsedMs == this.elapsedMs &&
-          other.accuracyM == this.accuracyM);
+          other.accuracyM == this.accuracyM &&
+          other.segment == this.segment);
 }
 
 class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
@@ -953,6 +1092,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
   final Value<double?> elevation;
   final Value<int> elapsedMs;
   final Value<double?> accuracyM;
+  final Value<int> segment;
   const TrackPointsCompanion({
     this.id = const Value.absent(),
     this.activityId = const Value.absent(),
@@ -962,6 +1102,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
     this.elevation = const Value.absent(),
     this.elapsedMs = const Value.absent(),
     this.accuracyM = const Value.absent(),
+    this.segment = const Value.absent(),
   });
   TrackPointsCompanion.insert({
     this.id = const Value.absent(),
@@ -972,6 +1113,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
     this.elevation = const Value.absent(),
     required int elapsedMs,
     this.accuracyM = const Value.absent(),
+    this.segment = const Value.absent(),
   }) : activityId = Value(activityId),
        seq = Value(seq),
        latitude = Value(latitude),
@@ -986,6 +1128,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
     Expression<double>? elevation,
     Expression<int>? elapsedMs,
     Expression<double>? accuracyM,
+    Expression<int>? segment,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -996,6 +1139,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
       if (elevation != null) 'elevation': elevation,
       if (elapsedMs != null) 'elapsed_ms': elapsedMs,
       if (accuracyM != null) 'accuracy_m': accuracyM,
+      if (segment != null) 'segment': segment,
     });
   }
 
@@ -1008,6 +1152,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
     Value<double?>? elevation,
     Value<int>? elapsedMs,
     Value<double?>? accuracyM,
+    Value<int>? segment,
   }) {
     return TrackPointsCompanion(
       id: id ?? this.id,
@@ -1018,6 +1163,7 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
       elevation: elevation ?? this.elevation,
       elapsedMs: elapsedMs ?? this.elapsedMs,
       accuracyM: accuracyM ?? this.accuracyM,
+      segment: segment ?? this.segment,
     );
   }
 
@@ -1048,6 +1194,9 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
     if (accuracyM.present) {
       map['accuracy_m'] = Variable<double>(accuracyM.value);
     }
+    if (segment.present) {
+      map['segment'] = Variable<int>(segment.value);
+    }
     return map;
   }
 
@@ -1061,7 +1210,8 @@ class TrackPointsCompanion extends UpdateCompanion<TrackPointRow> {
           ..write('longitude: $longitude, ')
           ..write('elevation: $elevation, ')
           ..write('elapsedMs: $elapsedMs, ')
-          ..write('accuracyM: $accuracyM')
+          ..write('accuracyM: $accuracyM, ')
+          ..write('segment: $segment')
           ..write(')'))
         .toString();
   }
@@ -3592,6 +3742,8 @@ typedef $$ActivitiesTableCreateCompanionBuilder = ActivitiesCompanion Function({
   Value<double> elevationGainM,
   Value<String?> notes,
   Value<DateTime> createdAt,
+  Value<ActivityStatus> status,
+  Value<bool> isDemo,
 });
 typedef $$ActivitiesTableUpdateCompanionBuilder = ActivitiesCompanion Function({
   Value<int> id,
@@ -3603,6 +3755,8 @@ typedef $$ActivitiesTableUpdateCompanionBuilder = ActivitiesCompanion Function({
   Value<double> elevationGainM,
   Value<String?> notes,
   Value<DateTime> createdAt,
+  Value<ActivityStatus> status,
+  Value<bool> isDemo,
 });
 
 final class $$ActivitiesTableReferences
@@ -3698,6 +3852,17 @@ class $$ActivitiesTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<ActivityStatus, ActivityStatus, String>
+  get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<bool> get isDemo => $composableBuilder(
+    column: $table.isDemo,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3805,6 +3970,16 @@ class $$ActivitiesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDemo => $composableBuilder(
+    column: $table.isDemo,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ActivitiesTableAnnotationComposer
@@ -3846,6 +4021,12 @@ class $$ActivitiesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ActivityStatus, String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDemo =>
+      $composableBuilder(column: $table.isDemo, builder: (column) => column);
 
   Expression<T> trackPointsRefs<T extends Object>(
     Expression<T> Function($$TrackPointsTableAnnotationComposer a) f,
@@ -3938,6 +4119,8 @@ class $$ActivitiesTableTableManager
                 Value<double> elevationGainM = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<ActivityStatus> status = const Value.absent(),
+                Value<bool> isDemo = const Value.absent(),
               }) => ActivitiesCompanion(
                 id: id,
                 name: name,
@@ -3948,6 +4131,8 @@ class $$ActivitiesTableTableManager
                 elevationGainM: elevationGainM,
                 notes: notes,
                 createdAt: createdAt,
+                status: status,
+                isDemo: isDemo,
               ),
           createCompanionCallback:
               ({
@@ -3960,6 +4145,8 @@ class $$ActivitiesTableTableManager
                 Value<double> elevationGainM = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<ActivityStatus> status = const Value.absent(),
+                Value<bool> isDemo = const Value.absent(),
               }) => ActivitiesCompanion.insert(
                 id: id,
                 name: name,
@@ -3970,6 +4157,8 @@ class $$ActivitiesTableTableManager
                 elevationGainM: elevationGainM,
                 notes: notes,
                 createdAt: createdAt,
+                status: status,
+                isDemo: isDemo,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -4064,6 +4253,7 @@ typedef $$TrackPointsTableCreateCompanionBuilder =
       Value<double?> elevation,
       required int elapsedMs,
       Value<double?> accuracyM,
+      Value<int> segment,
     });
 typedef $$TrackPointsTableUpdateCompanionBuilder =
     TrackPointsCompanion Function({
@@ -4075,6 +4265,7 @@ typedef $$TrackPointsTableUpdateCompanionBuilder =
       Value<double?> elevation,
       Value<int> elapsedMs,
       Value<double?> accuracyM,
+      Value<int> segment,
     });
 
 final class $$TrackPointsTableReferences
@@ -4140,6 +4331,11 @@ class $$TrackPointsTableFilterComposer
 
   ColumnFilters<double> get accuracyM => $composableBuilder(
     column: $table.accuracyM,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get segment => $composableBuilder(
+    column: $table.segment,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4211,6 +4407,11 @@ class $$TrackPointsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get segment => $composableBuilder(
+    column: $table.segment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ActivitiesTableOrderingComposer get activityId {
     final $$ActivitiesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4264,6 +4465,9 @@ class $$TrackPointsTableAnnotationComposer
 
   GeneratedColumn<double> get accuracyM =>
       $composableBuilder(column: $table.accuracyM, builder: (column) => column);
+
+  GeneratedColumn<int> get segment =>
+      $composableBuilder(column: $table.segment, builder: (column) => column);
 
   $$ActivitiesTableAnnotationComposer get activityId {
     final $$ActivitiesTableAnnotationComposer composer = $composerBuilder(
@@ -4325,6 +4529,7 @@ class $$TrackPointsTableTableManager
                 Value<double?> elevation = const Value.absent(),
                 Value<int> elapsedMs = const Value.absent(),
                 Value<double?> accuracyM = const Value.absent(),
+                Value<int> segment = const Value.absent(),
               }) => TrackPointsCompanion(
                 id: id,
                 activityId: activityId,
@@ -4334,6 +4539,7 @@ class $$TrackPointsTableTableManager
                 elevation: elevation,
                 elapsedMs: elapsedMs,
                 accuracyM: accuracyM,
+                segment: segment,
               ),
           createCompanionCallback:
               ({
@@ -4345,6 +4551,7 @@ class $$TrackPointsTableTableManager
                 Value<double?> elevation = const Value.absent(),
                 required int elapsedMs,
                 Value<double?> accuracyM = const Value.absent(),
+                Value<int> segment = const Value.absent(),
               }) => TrackPointsCompanion.insert(
                 id: id,
                 activityId: activityId,
@@ -4354,6 +4561,7 @@ class $$TrackPointsTableTableManager
                 elevation: elevation,
                 elapsedMs: elapsedMs,
                 accuracyM: accuracyM,
+                segment: segment,
               ),
           withReferenceMapper: (p0) => p0
               .map(

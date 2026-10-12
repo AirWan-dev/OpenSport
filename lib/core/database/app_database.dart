@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
+import '../models/activity_status.dart';
 import '../models/sport.dart';
 
 part 'app_database.g.dart';
@@ -18,6 +19,14 @@ class Activities extends Table {
   RealColumn get elevationGainM => real().withDefault(const Constant(0))();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  // Version 2 du schéma.
+  TextColumn get status => textEnum<ActivityStatus>().withDefault(
+    Constant(ActivityStatus.finished.name),
+  )();
+
+  /// Sortie de démonstration, retirée dès la première vraie sortie.
+  BoolColumn get isDemo => boolean().withDefault(const Constant(false))();
 }
 
 /// Les points GPS d'une activité, dans l'ordre de [seq].
@@ -35,6 +44,10 @@ class TrackPoints extends Table {
 
   /// Précision horizontale annoncée par le GPS, en mètres.
   RealColumn get accuracyM => real().nullable()();
+
+  /// Tronçon (version 2) : il change à chaque reprise après une pause, et
+  /// la distance entre deux tronçons n'est pas comptée.
+  IntColumn get segment => integer().withDefault(const Constant(0))();
 }
 
 /// Une photo rattachée à une activité, placée sur le tracé si possible.
@@ -127,10 +140,21 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _open());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.addColumn(activities, activities.status);
+        await migrator.addColumn(activities, activities.isDemo);
+        await migrator.addColumn(trackPoints, trackPoints.segment);
+        // Seule la sortie de démonstration existait en version 1.
+        await (update(activities)
+              ..where((a) => a.name.equals('Sortie de démonstration')))
+            .write(const ActivitiesCompanion(isDemo: Value(true)));
+      }
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },

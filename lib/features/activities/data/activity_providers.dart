@@ -21,3 +21,9 @@ final trackProvider = FutureProvider.family<Track, int>(
   (ref, activityId) =>
       ref.watch(activityRepositoryProvider).loadTrack(activityId),
 );
+
+/// Sortie restée « en cours » après un arrêt brutal de l'app, ou null.
+/// À invalider après avoir terminé ou supprimé une sortie.
+final interruptedRecordingProvider = FutureProvider.autoDispose<Activity?>(
+  (ref) => ref.watch(activityRepositoryProvider).findInterruptedRecording(),
+);

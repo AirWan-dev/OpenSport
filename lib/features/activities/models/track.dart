@@ -10,10 +10,18 @@ class TrackPoint {
   /// Altitude en mètres.
   final double elevation;
 
-  /// Temps écoulé depuis le début de l'activité.
+  /// Temps en mouvement depuis le début de l'activité (pauses exclues).
   final Duration elapsed;
 
-  const TrackPoint(this.position, this.elevation, this.elapsed);
+  /// Tronçon : change à chaque reprise après une pause.
+  final int segment;
+
+  const TrackPoint(
+    this.position,
+    this.elevation,
+    this.elapsed, {
+    this.segment = 0,
+  });
 }
 
 /// Une activité GPS (course, vélo...) avec ses statistiques dérivées.
@@ -53,11 +61,16 @@ class Track {
     final cumulative = <double>[0];
     final raw = <double>[0];
     for (var i = 1; i < points.length; i++) {
-      final d = distance(points[i - 1].position, points[i].position);
+      // Le trajet fait pendant une pause ne compte pas.
+      final sameSegment = points[i].segment == points[i - 1].segment;
+      final d = sameSegment
+          ? distance(points[i - 1].position, points[i].position)
+          : 0.0;
       cumulative.add(cumulative.last + d);
       final dt =
           (points[i].elapsed - points[i - 1].elapsed).inMilliseconds / 1000;
-      raw.add(dt > 0 ? d / dt : raw.last);
+      // Deux positions quasi simultanées donneraient une vitesse absurde.
+      raw.add(dt >= 0.5 ? d / dt : raw.last);
     }
     if (raw.length > 1) raw[0] = raw[1];
 
@@ -81,22 +94,36 @@ class Track {
   /// Distance totale en mètres.
   double get distance => cumulativeDistance.last;
 
-  Duration get duration => points.last.elapsed;
+  Duration get duration => points.isEmpty ? Duration.zero : points.last.elapsed;
 
   /// Allure moyenne en secondes par kilomètre.
-  double get averagePace => duration.inSeconds / (distance / 1000);
+  double get averagePace =>
+      distance > 0 ? duration.inMilliseconds / 1000 / (distance / 1000) : 0;
 
+  /// Dénivelé positif. L'altitude GPS est bruitée : seules les variations
+  /// de plus de [_elevationThreshold] mètres sont prises en compte.
   double get elevationGain {
+    if (points.isEmpty) return 0;
     var gain = 0.0;
-    for (var i = 1; i < points.length; i++) {
-      final delta = points[i].elevation - points[i - 1].elevation;
-      if (delta > 0) gain += delta;
+    var reference = points.first.elevation;
+    for (final p in points.skip(1)) {
+      final delta = p.elevation - reference;
+      if (delta >= _elevationThreshold) {
+        gain += delta;
+        reference = p.elevation;
+      } else if (delta <= -_elevationThreshold) {
+        reference = p.elevation;
+      }
     }
     return gain;
   }
 
-  double get minElevation => points.map((p) => p.elevation).reduce(math.min);
-  double get maxElevation => points.map((p) => p.elevation).reduce(math.max);
+  static const _elevationThreshold = 3.0;
+
+  double get minElevation =>
+      points.isEmpty ? 0 : points.map((p) => p.elevation).reduce(math.min);
+  double get maxElevation =>
+      points.isEmpty ? 0 : points.map((p) => p.elevation).reduce(math.max);
 
   /// Vitesse au percentile [p] (0..1), utile pour étalonner les couleurs.
   double speedPercentile(double p) {
