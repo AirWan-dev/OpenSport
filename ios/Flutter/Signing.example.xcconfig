@@ -1,0 +1,4 @@
+// Pour installer OpenSport sur ton iPhone, copie ce fichier en
+// Signing.xcconfig (même dossier) et mets l'identifiant de ton équipe Apple
+// (Xcode › Réglages › Apple Accounts, ou ton équipe « Personal Team »).
+DEVELOPMENT_TEAM = TON_TEAM_ID
