@@ -37,3 +37,27 @@ String formatKm(double meters) => (meters / 1000).toStringAsFixed(2);
 String formatDateTime(DateTime date) =>
     '${date.day} ${_months[date.month - 1]} · '
     '${date.hour}h${date.minute.toString().padLeft(2, '0')}';
+
+/// Poids en kilos sans zéro inutile, virgule décimale : « 60 », « 62,5 ».
+String formatWeight(double kg) {
+  final rounded = (kg * 100).round() / 100;
+  final text = rounded == rounded.roundToDouble()
+      ? rounded.toInt().toString()
+      : rounded.toString();
+  return text.replaceAll('.', ',');
+}
+
+/// Lit un poids saisi avec une virgule ou un point ; null si vide ou invalide.
+double? parseWeight(String text) =>
+    double.tryParse(text.trim().replaceAll(',', '.'));
+
+/// Nombre entier avec une espace fine entre les milliers : « 12 340 ».
+String formatThousands(num value) {
+  final digits = value.round().abs().toString();
+  final buffer = StringBuffer(value < 0 ? '-' : '');
+  for (var i = 0; i < digits.length; i++) {
+    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write('\u202F');
+    buffer.write(digits[i]);
+  }
+  return buffer.toString();
+}

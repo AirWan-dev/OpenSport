@@ -193,7 +193,7 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.selecting ? 'Ajouter des exercices' : 'Exercices'),
+        title: Text(widget.selecting ? 'Ajouter' : 'Exercices'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_rounded),

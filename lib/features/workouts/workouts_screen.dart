@@ -5,6 +5,7 @@ import 'package:opensport/core/widgets/coming_soon.dart';
 
 import 'data/workout_providers.dart';
 import 'screens/exercise_library_screen.dart';
+import 'screens/workout_screen.dart';
 
 /// Séances de musculation (étape 2 de la feuille de route).
 class WorkoutsScreen extends ConsumerWidget {
@@ -13,12 +14,35 @@ class WorkoutsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = ref.watch(exercisesProvider).value?.length;
+    final active = ref.watch(activeWorkoutProvider).value;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Muscu')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
         children: [
+          FilledButton.icon(
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(54),
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            icon: const Icon(Icons.play_arrow_rounded),
+            label: Text(
+              active == null
+                  ? 'Démarrer une séance'
+                  : 'Reprendre la séance en cours',
+            ),
+            onPressed: () async {
+              final id =
+                  active?.id ??
+                  await ref.read(workoutRepositoryProvider).startWorkout();
+              if (context.mounted) await WorkoutScreen.open(context, id);
+            },
+          ),
+          const SizedBox(height: 16),
           Card(
             clipBehavior: Clip.antiAlias,
             child: InkWell(
@@ -80,11 +104,11 @@ class WorkoutsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           const ComingSoon(
-            icon: Icons.fitness_center_rounded,
-            title: 'Séances',
+            icon: Icons.timer_outlined,
+            title: 'Bientôt',
             message:
-                'Séance en direct avec minuteur de repos, routines et '
-                'records personnels.',
+                'Minuteur de repos, routines à lancer en un appui, '
+                'historique des séances et records personnels.',
             step: 'Étape 2 · Musculation',
           ),
         ],
