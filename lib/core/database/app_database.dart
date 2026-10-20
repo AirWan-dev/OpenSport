@@ -2,6 +2,10 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
 import '../models/activity_status.dart';
+import '../models/equipment.dart';
+import '../models/exercise_type.dart';
+import '../models/muscle.dart';
+import '../models/set_kind.dart';
 import '../models/sport.dart';
 
 part 'app_database.g.dart';
@@ -63,13 +67,23 @@ class ActivityPhotos extends Table {
 
 // ------------------------------------------------------------- Musculation
 
-/// Un exercice de la bibliothèque (fourni ou créé par l'utilisateur).
+// Tables recréées en version 3 du schéma (jamais utilisées avant).
+
+/// Un exercice : fourni avec l'app (bibliothèque) ou créé par l'utilisateur.
 class Exercises extends Table {
   IntColumn get id => integer().autoIncrement()();
+
+  /// Clé stable d'un exercice de la bibliothèque (« bench-press-barbell »),
+  /// nulle pour un exercice créé par l'utilisateur.
+  TextColumn get catalogKey => text().nullable().unique()();
   TextColumn get name => text()();
-  TextColumn get primaryMuscle => text()();
-  TextColumn get equipment => text().nullable()();
-  BoolColumn get isCustom => boolean().withDefault(const Constant(false))();
+  TextColumn get type => textEnum<ExerciseType>()();
+  TextColumn get primaryMuscle => textEnum<Muscle>()();
+  TextColumn get secondaryMuscles => text().map(const MuscleListConverter())();
+  TextColumn get equipment => textEnum<Equipment>()();
+
+  /// Masqué de la bibliothèque mais gardé pour l'historique des séances.
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
 }
 
 /// Un modèle de séance réutilisable (« Push », « Jambes »...).
@@ -106,19 +120,51 @@ class Workouts extends Table {
   TextColumn get notes => text().nullable()();
 }
 
-/// Une série : [weightKg] × [reps] sur un exercice, pendant une séance.
-class WorkoutSets extends Table {
+/// Un exercice dans une séance, dans l'ordre de [position]. Il existe dès
+/// qu'on l'ajoute, même avant sa première série.
+class WorkoutExercises extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get workoutId =>
       integer().references(Workouts, #id, onDelete: KeyAction.cascade)();
   IntColumn get exerciseId => integer().references(Exercises, #id)();
+  IntColumn get position => integer()();
+  TextColumn get notes => text().nullable()();
+  IntColumn get restSeconds => integer().withDefault(const Constant(90))();
+}
 
-  /// Rang de l'exercice dans la séance, puis de la série dans l'exercice.
-  IntColumn get exerciseOrder => integer()();
-  IntColumn get setOrder => integer()();
+/// Une série d'un exercice de la séance, dans l'ordre de [position]. Selon
+/// le type d'exercice : [weightKg] × [reps], [reps] avec un lest facultatif
+/// dans [weightKg], ou [durationSeconds].
+class WorkoutSets extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get workoutExerciseId => integer().references(
+    WorkoutExercises,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
+  IntColumn get position => integer()();
+  TextColumn get kind =>
+      textEnum<SetKind>().withDefault(Constant(SetKind.normal.name))();
   RealColumn get weightKg => real().nullable()();
   IntColumn get reps => integer().nullable()();
-  BoolColumn get completed => boolean().withDefault(const Constant(false))();
+  IntColumn get durationSeconds => integer().nullable()();
+
+  /// Heure à laquelle la série a été cochée ; nulle tant qu'elle n'est pas faite.
+  DateTimeColumn get completedAt => dateTime().nullable()();
+}
+
+/// Liste de muscles stockée en texte : « shoulders,triceps ».
+class MuscleListConverter extends TypeConverter<List<Muscle>, String> {
+  const MuscleListConverter();
+
+  @override
+  List<Muscle> fromSql(String fromDb) => [
+    for (final name in fromDb.split(','))
+      if (name.isNotEmpty) Muscle.values.byName(name),
+  ];
+
+  @override
+  String toSql(List<Muscle> value) => value.map((m) => m.name).join(',');
 }
 
 // ------------------------------------------------------------------- Base
@@ -133,6 +179,7 @@ class WorkoutSets extends Table {
     Routines,
     RoutineExercises,
     Workouts,
+    WorkoutExercises,
     WorkoutSets,
   ],
 )
@@ -140,7 +187,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _open());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -153,6 +200,29 @@ class AppDatabase extends _$AppDatabase {
         await (update(activities)
               ..where((a) => a.name.equals('Sortie de démonstration')))
             .write(const ActivitiesCompanion(isDemo: Value(true)));
+      }
+      if (from < 3) {
+        // Les tables de musculation n'avaient jamais servi : elles sont
+        // recréées sous leur nouvelle forme, sans données à reprendre.
+        for (final name in [
+          'workout_sets',
+          'workouts',
+          'routine_exercises',
+          'routines',
+          'exercises',
+        ]) {
+          await migrator.deleteTable(name);
+        }
+        for (final table in <TableInfo>[
+          exercises,
+          routines,
+          routineExercises,
+          workouts,
+          workoutExercises,
+          workoutSets,
+        ]) {
+          await migrator.createTable(table);
+        }
       }
     },
     beforeOpen: (details) async {

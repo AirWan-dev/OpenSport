@@ -1,0 +1,1856 @@
+{
+  "about": "Bibliothèque d'exercices fournie avec OpenSport. Noms français : OpenSport (GPL-3.0). Muscles et matériel repris de free-exercise-db (https://github.com/yuhonas/free-exercise-db, domaine public, Unlicense) ; « source » donne l'identifiant d'origine. Ne jamais changer la clé d'un exercice : elle relie l'historique.",
+  "exercises": [
+    {
+      "key": "bench-press-barbell",
+      "name": "Développé couché (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "key": "bench-press-dumbbell",
+      "name": "Développé couché (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Bench_Press"
+    },
+    {
+      "key": "incline-bench-press-barbell",
+      "name": "Développé incliné (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Incline_Bench_Press_-_Medium_Grip"
+    },
+    {
+      "key": "incline-bench-press-dumbbell",
+      "name": "Développé incliné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Incline_Dumbbell_Press"
+    },
+    {
+      "key": "decline-bench-press-barbell",
+      "name": "Développé décliné (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Decline_Barbell_Bench_Press"
+    },
+    {
+      "key": "decline-bench-press-dumbbell",
+      "name": "Développé décliné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Decline_Dumbbell_Bench_Press"
+    },
+    {
+      "key": "bench-press-smith",
+      "name": "Développé couché (Smith machine)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Smith_Machine_Bench_Press"
+    },
+    {
+      "key": "incline-bench-press-smith",
+      "name": "Développé incliné (Smith machine)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Smith_Machine_Incline_Bench_Press"
+    },
+    {
+      "key": "chest-press-machine",
+      "name": "Presse à pectoraux (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Leverage_Chest_Press"
+    },
+    {
+      "key": "incline-chest-press-machine",
+      "name": "Presse à pectoraux inclinée (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Leverage_Incline_Chest_Press"
+    },
+    {
+      "key": "dumbbell-fly",
+      "name": "Écarté couché (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Flyes"
+    },
+    {
+      "key": "incline-dumbbell-fly",
+      "name": "Écarté incliné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "Incline_Dumbbell_Flyes"
+    },
+    {
+      "key": "pec-deck",
+      "name": "Butterfly (pec deck)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Butterfly"
+    },
+    {
+      "key": "cable-crossover",
+      "name": "Écarté à la poulie haute (vis-à-vis)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Cable_Crossover"
+    },
+    {
+      "key": "low-cable-crossover",
+      "name": "Écarté à la poulie basse (vis-à-vis)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Low_Cable_Crossover"
+    },
+    {
+      "key": "push-up",
+      "name": "Pompes",
+      "type": "bodyweightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Pushups"
+    },
+    {
+      "key": "incline-push-up",
+      "name": "Pompes inclinées (mains surélevées)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Incline_Push-Up"
+    },
+    {
+      "key": "decline-push-up",
+      "name": "Pompes déclinées (pieds surélevés)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Decline_Push-Up"
+    },
+    {
+      "key": "wide-push-up",
+      "name": "Pompes prise large",
+      "type": "bodyweightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "abdominals",
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Push-Up_Wide"
+    },
+    {
+      "key": "chest-dip",
+      "name": "Dips (pectoraux)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Dips_-_Chest_Version"
+    },
+    {
+      "key": "dumbbell-pullover",
+      "name": "Pull-over (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "chest",
+      "secondaryMuscles": [
+        "lats",
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Straight-Arm_Dumbbell_Pullover"
+    },
+    {
+      "key": "overhead-press-barbell",
+      "name": "Développé militaire (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Standing_Military_Press"
+    },
+    {
+      "key": "seated-overhead-press-barbell",
+      "name": "Développé militaire assis (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Seated_Barbell_Military_Press"
+    },
+    {
+      "key": "seated-shoulder-press-dumbbell",
+      "name": "Développé épaules assis (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Seated_Dumbbell_Press"
+    },
+    {
+      "key": "standing-shoulder-press-dumbbell",
+      "name": "Développé épaules debout (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Standing_Dumbbell_Press"
+    },
+    {
+      "key": "arnold-press",
+      "name": "Développé Arnold (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "dumbbell",
+      "source": "Arnold_Dumbbell_Press"
+    },
+    {
+      "key": "shoulder-press-machine",
+      "name": "Développé épaules (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Machine_Shoulder_Military_Press"
+    },
+    {
+      "key": "shoulder-press-smith",
+      "name": "Développé épaules (Smith machine)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": "machine",
+      "source": "Smith_Machine_Overhead_Shoulder_Press"
+    },
+    {
+      "key": "push-press",
+      "name": "Push press (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "quadriceps",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Push_Press"
+    },
+    {
+      "key": "lateral-raise-dumbbell",
+      "name": "Élévations latérales (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Side_Lateral_Raise"
+    },
+    {
+      "key": "lateral-raise-cable",
+      "name": "Élévation latérale à la poulie basse",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "cable",
+      "source": "Standing_Low-Pulley_Deltoid_Raise"
+    },
+    {
+      "key": "front-raise-dumbbell",
+      "name": "Élévations frontales (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Front_Dumbbell_Raise"
+    },
+    {
+      "key": "front-raise-plate",
+      "name": "Élévation frontale (disque)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "plate",
+      "source": "Front_Plate_Raise"
+    },
+    {
+      "key": "front-raise-cable",
+      "name": "Élévation frontale (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Front_Cable_Raise"
+    },
+    {
+      "key": "rear-delt-fly-dumbbell",
+      "name": "Oiseau (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Seated_Bent-Over_Rear_Delt_Raise"
+    },
+    {
+      "key": "reverse-pec-deck",
+      "name": "Oiseau à la machine (pec deck inversé)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Reverse_Machine_Flyes"
+    },
+    {
+      "key": "rear-delt-fly-cable",
+      "name": "Oiseau à la poulie",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Cable_Rear_Delt_Fly"
+    },
+    {
+      "key": "face-pull",
+      "name": "Face pull (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "middleBack"
+      ],
+      "equipment": "cable",
+      "source": "Face_Pull"
+    },
+    {
+      "key": "upright-row-barbell",
+      "name": "Rowing menton (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "traps"
+      ],
+      "equipment": "barbell",
+      "source": "Upright_Barbell_Row"
+    },
+    {
+      "key": "upright-row-dumbbell",
+      "name": "Rowing menton (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "traps",
+      "secondaryMuscles": [
+        "biceps",
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "Standing_Dumbbell_Upright_Row"
+    },
+    {
+      "key": "upright-row-cable",
+      "name": "Rowing menton (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "traps",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Upright_Cable_Row"
+    },
+    {
+      "key": "band-pull-apart",
+      "name": "Écartés à l'élastique (band pull-apart)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "middleBack",
+        "traps"
+      ],
+      "equipment": "band",
+      "source": "Band_Pull_Apart"
+    },
+    {
+      "key": "external-rotation-cable",
+      "name": "Rotation externe (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "External_Rotation_with_Cable"
+    },
+    {
+      "key": "external-rotation-dumbbell",
+      "name": "Rotation externe (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "External_Rotation"
+    },
+    {
+      "key": "shrug-barbell",
+      "name": "Haussements d'épaules (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "traps",
+      "secondaryMuscles": [],
+      "equipment": "barbell",
+      "source": "Barbell_Shrug"
+    },
+    {
+      "key": "shrug-dumbbell",
+      "name": "Haussements d'épaules (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "traps",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Shrug"
+    },
+    {
+      "key": "shrug-machine",
+      "name": "Haussements d'épaules (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "traps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "machine",
+      "source": "Leverage_Shrug"
+    },
+    {
+      "key": "pull-up",
+      "name": "Tractions (pronation)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack"
+      ],
+      "equipment": "bodyweight",
+      "source": "Pullups"
+    },
+    {
+      "key": "chin-up",
+      "name": "Tractions supination (chin-up)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "forearms",
+        "middleBack"
+      ],
+      "equipment": "bodyweight",
+      "source": "Chin-Up"
+    },
+    {
+      "key": "neutral-grip-pull-up",
+      "name": "Tractions prise neutre",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack",
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "V-Bar_Pullup"
+    },
+    {
+      "key": "muscle-up",
+      "name": "Muscle-up",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "abdominals",
+        "biceps",
+        "forearms",
+        "middleBack",
+        "shoulders",
+        "traps",
+        "triceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Muscle_Up"
+    },
+    {
+      "key": "lat-pulldown",
+      "name": "Tirage vertical prise large",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack",
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Wide-Grip_Lat_Pulldown"
+    },
+    {
+      "key": "close-grip-lat-pulldown",
+      "name": "Tirage vertical prise serrée",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack",
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Close-Grip_Front_Lat_Pulldown"
+    },
+    {
+      "key": "underhand-lat-pulldown",
+      "name": "Tirage vertical supination",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack",
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Underhand_Cable_Pulldowns"
+    },
+    {
+      "key": "v-bar-lat-pulldown",
+      "name": "Tirage vertical prise neutre (triangle)",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack",
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "V-Bar_Pulldown"
+    },
+    {
+      "key": "straight-arm-pulldown",
+      "name": "Pull-down bras tendus (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Straight-Arm_Pulldown"
+    },
+    {
+      "key": "seated-cable-row",
+      "name": "Tirage horizontal assis (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Seated_Cable_Rows"
+    },
+    {
+      "key": "one-arm-cable-row",
+      "name": "Tirage horizontal unilatéral (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "traps"
+      ],
+      "equipment": "cable",
+      "source": "Seated_One-arm_Cable_Pulley_Rows"
+    },
+    {
+      "key": "barbell-row",
+      "name": "Rowing barre (buste penché)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "barbell",
+      "source": "Bent_Over_Barbell_Row"
+    },
+    {
+      "key": "reverse-grip-barbell-row",
+      "name": "Rowing barre supination (Yates)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "barbell",
+      "source": "Reverse_Grip_Bent-Over_Rows"
+    },
+    {
+      "key": "one-arm-dumbbell-row",
+      "name": "Rowing unilatéral (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "One-Arm_Dumbbell_Row"
+    },
+    {
+      "key": "dumbbell-row",
+      "name": "Rowing buste penché (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "Bent_Over_Two-Dumbbell_Row"
+    },
+    {
+      "key": "incline-dumbbell-row",
+      "name": "Rowing sur banc incliné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "forearms",
+        "lats",
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Incline_Row"
+    },
+    {
+      "key": "t-bar-row",
+      "name": "Rowing T-bar",
+      "type": "weightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "biceps",
+        "lats"
+      ],
+      "equipment": "barbell",
+      "source": "T-Bar_Row_with_Handle"
+    },
+    {
+      "key": "machine-row",
+      "name": "Rowing (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "lats",
+      "secondaryMuscles": [
+        "biceps",
+        "middleBack"
+      ],
+      "equipment": "machine",
+      "source": "Leverage_Iso_Row"
+    },
+    {
+      "key": "inverted-row",
+      "name": "Rowing inversé (poids du corps)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "middleBack",
+      "secondaryMuscles": [
+        "lats"
+      ],
+      "equipment": "bodyweight",
+      "source": "Inverted_Row"
+    },
+    {
+      "key": "deadlift",
+      "name": "Soulevé de terre",
+      "type": "weightReps",
+      "primaryMuscle": "lowerBack",
+      "secondaryMuscles": [
+        "calves",
+        "forearms",
+        "glutes",
+        "hamstrings",
+        "lats",
+        "middleBack",
+        "quadriceps",
+        "traps"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Deadlift"
+    },
+    {
+      "key": "sumo-deadlift",
+      "name": "Soulevé de terre sumo",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "adductors",
+        "forearms",
+        "glutes",
+        "lowerBack",
+        "middleBack",
+        "quadriceps",
+        "traps"
+      ],
+      "equipment": "barbell",
+      "source": "Sumo_Deadlift"
+    },
+    {
+      "key": "romanian-deadlift-barbell",
+      "name": "Soulevé de terre roumain (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "lowerBack"
+      ],
+      "equipment": "barbell",
+      "source": "Romanian_Deadlift"
+    },
+    {
+      "key": "romanian-deadlift-dumbbell",
+      "name": "Soulevé de terre roumain (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "glutes",
+        "lowerBack"
+      ],
+      "equipment": "dumbbell",
+      "source": "Stiff-Legged_Dumbbell_Deadlift"
+    },
+    {
+      "key": "stiff-leg-deadlift",
+      "name": "Soulevé de terre jambes tendues (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "glutes",
+        "lowerBack"
+      ],
+      "equipment": "barbell",
+      "source": "Stiff-Legged_Barbell_Deadlift"
+    },
+    {
+      "key": "trap-bar-deadlift",
+      "name": "Soulevé de terre à la trap bar",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "barbell",
+      "source": "Trap_Bar_Deadlift"
+    },
+    {
+      "key": "rack-pull",
+      "name": "Rack pull (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "lowerBack",
+      "secondaryMuscles": [
+        "forearms",
+        "glutes",
+        "hamstrings",
+        "traps"
+      ],
+      "equipment": "barbell",
+      "source": "Rack_Pulls"
+    },
+    {
+      "key": "good-morning",
+      "name": "Good morning (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "abdominals",
+        "glutes",
+        "lowerBack"
+      ],
+      "equipment": "barbell",
+      "source": "Good_Morning"
+    },
+    {
+      "key": "back-extension",
+      "name": "Extensions lombaires (banc à 45°)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lowerBack",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "other",
+      "source": "Hyperextensions_Back_Extensions"
+    },
+    {
+      "key": "superman",
+      "name": "Superman",
+      "type": "bodyweightReps",
+      "primaryMuscle": "lowerBack",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Superman"
+    },
+    {
+      "key": "barbell-curl",
+      "name": "Curl barre",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Curl"
+    },
+    {
+      "key": "ez-bar-curl",
+      "name": "Curl barre EZ",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "ezBar",
+      "source": "EZ-Bar_Curl"
+    },
+    {
+      "key": "dumbbell-curl",
+      "name": "Curl haltères",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Bicep_Curl"
+    },
+    {
+      "key": "alternate-dumbbell-curl",
+      "name": "Curl alterné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Alternate_Bicep_Curl"
+    },
+    {
+      "key": "hammer-curl",
+      "name": "Curl marteau (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Hammer_Curls"
+    },
+    {
+      "key": "incline-dumbbell-curl",
+      "name": "Curl incliné (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Incline_Dumbbell_Curl"
+    },
+    {
+      "key": "concentration-curl",
+      "name": "Curl concentré (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "dumbbell",
+      "source": "Concentration_Curls"
+    },
+    {
+      "key": "preacher-curl",
+      "name": "Curl au pupitre (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "barbell",
+      "source": "Preacher_Curl"
+    },
+    {
+      "key": "preacher-curl-machine",
+      "name": "Curl au pupitre (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Machine_Preacher_Curls"
+    },
+    {
+      "key": "biceps-curl-machine",
+      "name": "Curl biceps (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Machine_Bicep_Curl"
+    },
+    {
+      "key": "cable-curl",
+      "name": "Curl à la poulie basse",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Standing_Biceps_Cable_Curl"
+    },
+    {
+      "key": "rope-hammer-curl",
+      "name": "Curl marteau à la corde (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Cable_Hammer_Curls_-_Rope_Attachment"
+    },
+    {
+      "key": "reverse-curl",
+      "name": "Curl inversé (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "biceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "barbell",
+      "source": "Reverse_Barbell_Curl"
+    },
+    {
+      "key": "triceps-pushdown",
+      "name": "Extension triceps poulie haute (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Triceps_Pushdown"
+    },
+    {
+      "key": "rope-pushdown",
+      "name": "Extension triceps poulie haute (corde)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Triceps_Pushdown_-_Rope_Attachment"
+    },
+    {
+      "key": "overhead-rope-extension",
+      "name": "Extension triceps au-dessus de la tête (corde)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Triceps_Overhead_Extension_with_Rope"
+    },
+    {
+      "key": "overhead-dumbbell-extension",
+      "name": "Extension triceps au-dessus de la tête (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Standing_Dumbbell_Triceps_Extension"
+    },
+    {
+      "key": "skull-crusher",
+      "name": "Barre au front (barre EZ)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": "ezBar",
+      "source": "EZ-Bar_Skullcrusher"
+    },
+    {
+      "key": "lying-dumbbell-extension",
+      "name": "Extension triceps couché (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "dumbbell",
+      "source": "Lying_Dumbbell_Tricep_Extension"
+    },
+    {
+      "key": "dumbbell-kickback",
+      "name": "Kickback triceps (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Tricep_Dumbbell_Kickback"
+    },
+    {
+      "key": "close-grip-bench-press",
+      "name": "Développé couché prise serrée (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "barbell",
+      "source": "Close-Grip_Barbell_Bench_Press"
+    },
+    {
+      "key": "triceps-extension-machine",
+      "name": "Extension triceps (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Machine_Triceps_Extension"
+    },
+    {
+      "key": "triceps-dip",
+      "name": "Dips (triceps)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "Dips_-_Triceps_Version"
+    },
+    {
+      "key": "bench-dip",
+      "name": "Dips entre deux bancs",
+      "type": "bodyweightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "Bench_Dips"
+    },
+    {
+      "key": "dip-machine",
+      "name": "Dips (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "machine",
+      "source": "Dip_Machine"
+    },
+    {
+      "key": "diamond-push-up",
+      "name": "Pompes diamant (prise serrée)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "triceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "Push-Ups_-_Close_Triceps_Position"
+    },
+    {
+      "key": "wrist-curl",
+      "name": "Curl poignets (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "forearms",
+      "secondaryMuscles": [],
+      "equipment": "barbell",
+      "source": "Seated_Palm-Up_Barbell_Wrist_Curl"
+    },
+    {
+      "key": "reverse-wrist-curl",
+      "name": "Curl poignets inversé (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "forearms",
+      "secondaryMuscles": [],
+      "equipment": "barbell",
+      "source": "Seated_Palms-Down_Barbell_Wrist_Curl"
+    },
+    {
+      "key": "back-squat",
+      "name": "Squat (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings",
+        "lowerBack"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Squat"
+    },
+    {
+      "key": "front-squat",
+      "name": "Squat avant (front squat)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "abdominals",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "barbell",
+      "source": "Front_Squat_Clean_Grip"
+    },
+    {
+      "key": "goblet-squat",
+      "name": "Goblet squat",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings",
+        "shoulders"
+      ],
+      "equipment": "kettlebell",
+      "source": "Goblet_Squat"
+    },
+    {
+      "key": "bodyweight-squat",
+      "name": "Squat au poids du corps",
+      "type": "bodyweightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Bodyweight_Squat"
+    },
+    {
+      "key": "smith-squat",
+      "name": "Squat (Smith machine)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings",
+        "lowerBack"
+      ],
+      "equipment": "machine",
+      "source": "Smith_Machine_Squat"
+    },
+    {
+      "key": "hack-squat",
+      "name": "Hack squat (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "machine",
+      "source": "Hack_Squat"
+    },
+    {
+      "key": "leg-press",
+      "name": "Presse à cuisses",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "machine",
+      "source": "Leg_Press"
+    },
+    {
+      "key": "leg-extension",
+      "name": "Leg extension (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Leg_Extensions"
+    },
+    {
+      "key": "dumbbell-lunge",
+      "name": "Fentes avant (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Lunges"
+    },
+    {
+      "key": "barbell-lunge",
+      "name": "Fentes avant (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Lunge"
+    },
+    {
+      "key": "walking-lunge",
+      "name": "Fentes marchées",
+      "type": "bodyweightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Bodyweight_Walking_Lunge"
+    },
+    {
+      "key": "reverse-lunge-dumbbell",
+      "name": "Fentes arrière (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Rear_Lunge"
+    },
+    {
+      "key": "bulgarian-split-squat",
+      "name": "Squat bulgare (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "dumbbell",
+      "source": "Split_Squat_with_Dumbbells"
+    },
+    {
+      "key": "split-squat",
+      "name": "Fentes statiques (split squat)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "quadriceps"
+      ],
+      "equipment": "bodyweight",
+      "source": "Split_Squats"
+    },
+    {
+      "key": "dumbbell-step-up",
+      "name": "Montées sur banc (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Step_Ups"
+    },
+    {
+      "key": "jump-squat",
+      "name": "Squat sauté",
+      "type": "bodyweightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Freehand_Jump_Squat"
+    },
+    {
+      "key": "box-jump",
+      "name": "Sauts sur boîte (box jump)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "abductors",
+        "adductors",
+        "calves",
+        "glutes",
+        "quadriceps"
+      ],
+      "equipment": "other",
+      "source": "Front_Box_Jump"
+    },
+    {
+      "key": "lying-leg-curl",
+      "name": "Leg curl allongé (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Lying_Leg_Curls"
+    },
+    {
+      "key": "seated-leg-curl",
+      "name": "Leg curl assis (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Seated_Leg_Curl"
+    },
+    {
+      "key": "standing-leg-curl",
+      "name": "Leg curl debout (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Standing_Leg_Curl"
+    },
+    {
+      "key": "nordic-curl",
+      "name": "Nordic curl",
+      "type": "bodyweightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "lowerBack"
+      ],
+      "equipment": "bodyweight",
+      "source": "Natural_Glute_Ham_Raise"
+    },
+    {
+      "key": "kettlebell-swing",
+      "name": "Kettlebell swing",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "calves",
+        "glutes",
+        "lowerBack",
+        "shoulders"
+      ],
+      "equipment": "kettlebell",
+      "source": "One-Arm_Kettlebell_Swings"
+    },
+    {
+      "key": "hip-thrust",
+      "name": "Hip thrust (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "calves",
+        "hamstrings"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Hip_Thrust"
+    },
+    {
+      "key": "glute-bridge-barbell",
+      "name": "Pont fessier (barre)",
+      "type": "weightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "calves",
+        "hamstrings"
+      ],
+      "equipment": "barbell",
+      "source": "Barbell_Glute_Bridge"
+    },
+    {
+      "key": "glute-bridge",
+      "name": "Pont fessier (poids du corps)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Butt_Lift_Bridge"
+    },
+    {
+      "key": "single-leg-glute-bridge",
+      "name": "Pont fessier sur une jambe",
+      "type": "bodyweightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Single_Leg_Glute_Bridge"
+    },
+    {
+      "key": "cable-glute-kickback",
+      "name": "Kickback fessier (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": "cable",
+      "source": "One-Legged_Cable_Kickback"
+    },
+    {
+      "key": "glute-kickback",
+      "name": "Kickback fessier au sol",
+      "type": "bodyweightReps",
+      "primaryMuscle": "glutes",
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": "Glute_Kickback"
+    },
+    {
+      "key": "hip-abduction-machine",
+      "name": "Abducteurs (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "abductors",
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": "machine",
+      "source": "Thigh_Abductor"
+    },
+    {
+      "key": "hip-adduction-machine",
+      "name": "Adducteurs (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "adductors",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "machine",
+      "source": "Thigh_Adductor"
+    },
+    {
+      "key": "standing-calf-raise-machine",
+      "name": "Mollets debout (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "calves",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Standing_Calf_Raises"
+    },
+    {
+      "key": "seated-calf-raise",
+      "name": "Mollets assis (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "calves",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Seated_Calf_Raise"
+    },
+    {
+      "key": "leg-press-calf-raise",
+      "name": "Mollets à la presse",
+      "type": "weightReps",
+      "primaryMuscle": "calves",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Calf_Press_On_The_Leg_Press_Machine"
+    },
+    {
+      "key": "standing-calf-raise-dumbbell",
+      "name": "Mollets debout (haltères)",
+      "type": "weightReps",
+      "primaryMuscle": "calves",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Standing_Dumbbell_Calf_Raise"
+    },
+    {
+      "key": "crunch",
+      "name": "Crunch",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Crunches"
+    },
+    {
+      "key": "cable-crunch",
+      "name": "Crunch à la poulie (à genoux)",
+      "type": "weightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "cable",
+      "source": "Cable_Crunch"
+    },
+    {
+      "key": "crunch-machine",
+      "name": "Crunch (machine)",
+      "type": "weightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "machine",
+      "source": "Ab_Crunch_Machine"
+    },
+    {
+      "key": "reverse-crunch",
+      "name": "Crunch inversé",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Reverse_Crunch"
+    },
+    {
+      "key": "decline-crunch",
+      "name": "Crunch sur banc décliné",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Decline_Crunch"
+    },
+    {
+      "key": "sit-up",
+      "name": "Sit-up (relevé de buste)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Sit-Up"
+    },
+    {
+      "key": "hanging-leg-raise",
+      "name": "Relevé de jambes suspendu",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Hanging_Leg_Raise"
+    },
+    {
+      "key": "captains-chair-knee-raise",
+      "name": "Relevé de genoux (chaise romaine)",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "other",
+      "source": "Knee_Hip_Raise_On_Parallel_Bars"
+    },
+    {
+      "key": "lying-leg-raise",
+      "name": "Relevé de jambes allongé",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Flat_Bench_Lying_Leg_Raise"
+    },
+    {
+      "key": "plank",
+      "name": "Gainage (planche)",
+      "type": "duration",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Plank"
+    },
+    {
+      "key": "side-plank",
+      "name": "Gainage latéral",
+      "type": "duration",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "Side_Bridge"
+    },
+    {
+      "key": "russian-twist",
+      "name": "Russian twist",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [
+        "lowerBack"
+      ],
+      "equipment": "bodyweight",
+      "source": "Russian_Twist"
+    },
+    {
+      "key": "ab-wheel",
+      "name": "Roue abdominale",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "other",
+      "source": "Ab_Roller"
+    },
+    {
+      "key": "cable-woodchop",
+      "name": "Bûcheron à la poulie (woodchop)",
+      "type": "weightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [
+        "shoulders"
+      ],
+      "equipment": "cable",
+      "source": "Standing_Cable_Wood_Chop"
+    },
+    {
+      "key": "pallof-press",
+      "name": "Pallof press (poulie)",
+      "type": "weightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders",
+        "triceps"
+      ],
+      "equipment": "cable",
+      "source": "Pallof_Press"
+    },
+    {
+      "key": "dumbbell-side-bend",
+      "name": "Flexion latérale (haltère)",
+      "type": "weightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "dumbbell",
+      "source": "Dumbbell_Side_Bend"
+    },
+    {
+      "key": "dead-bug",
+      "name": "Dead bug",
+      "type": "bodyweightReps",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": "Dead_Bug"
+    },
+    {
+      "key": "mountain-climber",
+      "name": "Mountain climbers",
+      "type": "duration",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "chest",
+        "hamstrings",
+        "shoulders"
+      ],
+      "equipment": "bodyweight",
+      "source": "Mountain_Climbers"
+    },
+    {
+      "key": "power-clean",
+      "name": "Épaulé (power clean)",
+      "type": "weightReps",
+      "primaryMuscle": "hamstrings",
+      "secondaryMuscles": [
+        "calves",
+        "forearms",
+        "glutes",
+        "lowerBack",
+        "middleBack",
+        "quadriceps",
+        "shoulders",
+        "traps",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Power_Clean"
+    },
+    {
+      "key": "clean-and-jerk",
+      "name": "Épaulé-jeté",
+      "type": "weightReps",
+      "primaryMuscle": "shoulders",
+      "secondaryMuscles": [
+        "abdominals",
+        "glutes",
+        "hamstrings",
+        "lowerBack",
+        "quadriceps",
+        "traps",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Clean_and_Jerk"
+    },
+    {
+      "key": "snatch",
+      "name": "Arraché",
+      "type": "weightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "biceps",
+        "glutes",
+        "hamstrings",
+        "lowerBack",
+        "shoulders",
+        "traps",
+        "triceps"
+      ],
+      "equipment": "barbell",
+      "source": "Snatch"
+    },
+    {
+      "key": "pistol-squat",
+      "name": "Pistol squat",
+      "type": "bodyweightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": "bodyweight",
+      "source": null
+    },
+    {
+      "key": "wall-sit",
+      "name": "Chaise contre le mur",
+      "type": "duration",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": "bodyweight",
+      "source": null
+    },
+    {
+      "key": "hollow-hold",
+      "name": "Hollow hold (gainage creux)",
+      "type": "duration",
+      "primaryMuscle": "abdominals",
+      "secondaryMuscles": [],
+      "equipment": "bodyweight",
+      "source": null
+    },
+    {
+      "key": "burpee",
+      "name": "Burpees",
+      "type": "bodyweightReps",
+      "primaryMuscle": "quadriceps",
+      "secondaryMuscles": [
+        "chest",
+        "shoulders",
+        "triceps",
+        "abdominals",
+        "glutes"
+      ],
+      "equipment": "bodyweight",
+      "source": null
+    }
+  ]
+}
