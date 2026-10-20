@@ -94,6 +94,79 @@ void main() {
     expect(custom.isArchived, isFalse);
   });
 
+  test('la liste est triée sans tenir compte des accents', () async {
+    await repository.syncCatalog([
+      _exercise('squat', 'Squat (barre)'),
+      _exercise('fly', 'Écarté couché (haltères)'),
+      _exercise('bench', 'Développé couché (barre)'),
+    ]);
+    final names = (await repository.watchExercises().first).map((e) => e.name);
+    expect(names, [
+      'Développé couché (barre)',
+      'Écarté couché (haltères)',
+      'Squat (barre)',
+    ]);
+  });
+
+  Future<int> createCustom() => repository.saveCustomExercise(
+    name: '  Mon exercice ',
+    type: ExerciseType.duration,
+    primaryMuscle: Muscle.abdominals,
+    secondaryMuscles: const [],
+    equipment: Equipment.other,
+  );
+
+  test('un exercice perso se crée puis se modifie', () async {
+    final id = await createCustom();
+    await repository.saveCustomExercise(
+      id: id,
+      name: 'Gainage sur ballon',
+      type: ExerciseType.duration,
+      primaryMuscle: Muscle.abdominals,
+      secondaryMuscles: const [Muscle.lowerBack],
+      equipment: Equipment.other,
+    );
+
+    final exercise = (await repository.watchExercises().first).single;
+    expect(exercise.id, id);
+    expect(exercise.name, 'Gainage sur ballon');
+    expect(exercise.secondaryMuscles, [Muscle.lowerBack]);
+  });
+
+  test('un exercice perso jamais utilisé est vraiment supprimé', () async {
+    final id = await createCustom();
+    await repository.deleteCustomExercise(id);
+    expect(await db.select(db.exercises).get(), isEmpty);
+  });
+
+  test('un exercice perso utilisé dans une séance est archivé', () async {
+    final id = await createCustom();
+    final workoutId = await db
+        .into(db.workouts)
+        .insert(WorkoutsCompanion.insert(startedAt: DateTime(2026, 10, 20)));
+    await db
+        .into(db.workoutExercises)
+        .insert(
+          WorkoutExercisesCompanion.insert(
+            workoutId: workoutId,
+            exerciseId: id,
+            position: 0,
+          ),
+        );
+    await repository.deleteCustomExercise(id);
+
+    expect(await repository.watchExercises().first, isEmpty);
+    final row = await db.select(db.exercises).getSingle();
+    expect(row.isArchived, isTrue);
+  });
+
+  test('un exercice de la bibliothèque ne peut pas être supprimé', () async {
+    await repository.syncCatalog([_exercise('bench', 'Développé couché')]);
+    final bench = await byKey('bench');
+    await repository.deleteCustomExercise(bench.id);
+    expect((await byKey('bench')).isArchived, isFalse);
+  });
+
   test('une série supprime en cascade avec sa séance', () async {
     await repository.syncCatalog([_exercise('bench', 'Développé couché')]);
     final exercise = await byKey('bench');

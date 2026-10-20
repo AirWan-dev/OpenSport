@@ -1,21 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:opensport/core/theme/app_theme.dart';
 import 'package:opensport/core/widgets/coming_soon.dart';
 
+import 'data/workout_providers.dart';
+import 'screens/exercise_library_screen.dart';
+
 /// Séances de musculation (étape 2 de la feuille de route).
-class WorkoutsScreen extends StatelessWidget {
+class WorkoutsScreen extends ConsumerWidget {
   const WorkoutsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(exercisesProvider).value?.length;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Muscu')),
-      body: const ComingSoon(
-        icon: Icons.fitness_center_rounded,
-        title: 'Musculation',
-        message:
-            'Bibliothèque d\'exercices, séance en direct avec minuteur '
-            'de repos, routines et records personnels.',
-        step: 'Étape 2 · Musculation',
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+        children: [
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ExerciseLibraryScreen(),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.menu_book_rounded,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Exercices',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            count == null
+                                ? 'Bibliothèque et exercices perso'
+                                : '$count exercices',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.textMuted,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const ComingSoon(
+            icon: Icons.fitness_center_rounded,
+            title: 'Séances',
+            message:
+                'Séance en direct avec minuteur de repos, routines et '
+                'records personnels.',
+            step: 'Étape 2 · Musculation',
+          ),
+        ],
       ),
     );
   }

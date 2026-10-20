@@ -1,6 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:opensport/core/database/app_database.dart';
+import 'package:opensport/core/models/equipment.dart';
+import 'package:opensport/core/models/exercise_type.dart';
+import 'package:opensport/core/models/muscle.dart';
+import 'package:opensport/core/search.dart';
 
 import 'exercise_catalog.dart';
 
@@ -10,12 +14,63 @@ class ExerciseRepository {
 
   final AppDatabase _db;
 
-  /// Les exercices proposés (hors archivés), en direct.
+  /// Les exercices proposés (hors archivés), en direct, par ordre
+  /// alphabétique sans tenir compte des accents (« Écarté » avec les E).
   Stream<List<Exercise>> watchExercises() {
-    return (_db.select(_db.exercises)
-          ..where((e) => e.isArchived.equals(false))
-          ..orderBy([(e) => OrderingTerm.asc(e.name)]))
-        .watch();
+    final query = _db.select(_db.exercises)
+      ..where((e) => e.isArchived.equals(false));
+    return query.watch().map(
+      (list) => list
+        ..sort(
+          (a, b) =>
+              normalizeForSearch(a.name).compareTo(normalizeForSearch(b.name)),
+        ),
+    );
+  }
+
+  /// Crée un exercice perso, ou modifie celui d'id [id]. Renvoie son id.
+  Future<int> saveCustomExercise({
+    int? id,
+    required String name,
+    required ExerciseType type,
+    required Muscle primaryMuscle,
+    required List<Muscle> secondaryMuscles,
+    required Equipment equipment,
+  }) async {
+    final companion = ExercisesCompanion.insert(
+      name: name.trim(),
+      type: type,
+      primaryMuscle: primaryMuscle,
+      secondaryMuscles: secondaryMuscles,
+      equipment: equipment,
+    );
+    if (id == null) return _db.into(_db.exercises).insert(companion);
+    await (_db.update(
+      _db.exercises,
+    )..where((e) => e.id.equals(id) & e.catalogKey.isNull())).write(companion);
+    return id;
+  }
+
+  /// Retire un exercice perso de la bibliothèque. S'il figure dans une
+  /// séance ou une routine, il est seulement archivé pour garder l'historique.
+  Future<void> deleteCustomExercise(int id) {
+    return _db.transaction(() async {
+      final inWorkout = await (_db.select(
+        _db.workoutExercises,
+      )..where((w) => w.exerciseId.equals(id))).get();
+      final inRoutine = await (_db.select(
+        _db.routineExercises,
+      )..where((r) => r.exerciseId.equals(id))).get();
+      if (inWorkout.isEmpty && inRoutine.isEmpty) {
+        await (_db.delete(
+          _db.exercises,
+        )..where((e) => e.id.equals(id) & e.catalogKey.isNull())).go();
+      } else {
+        await (_db.update(_db.exercises)
+              ..where((e) => e.id.equals(id) & e.catalogKey.isNull()))
+            .write(const ExercisesCompanion(isArchived: Value(true)));
+      }
+    });
   }
 
   /// Aligne la base sur la bibliothèque fournie : ajoute les nouveaux
